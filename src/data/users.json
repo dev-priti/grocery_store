@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Demo Customer",
+    "email": "demo@example.com",
+    "phone": "+91-9000000000",
+    "address": {
+      "line1": "12 Market Road",
+      "city": "Lucknow",
+      "state": "Uttar Pradesh",
+      "pincode": "226001"
+    }
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Fresh Fruits Sale",
+    "description": "Get 15% off selected fresh fruits.",
+    "discountPercentage": 15,
+    "categoryId": 1,
+    "code": "FRESH15",
+    "active": true
+  },
+  {
+    "id": 2,
+    "title": "Breakfast Deal",
+    "description": "Save ₹50 on selected breakfast products.",
+    "discountAmount": 50,
+    "categoryId": 4,
+    "code": "BREAKFAST50",
+    "active": true
+  },
+  {
+    "id": 3,
+    "title": "Snack Weekend",
+    "description": "Get 10% off selected snacks.",
+    "discountPercentage": 10,
+    "categoryId": 5,
+    "code": "SNACK10",
+    "active": true
+  }
+]
