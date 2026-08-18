@@ -1,10 +1,15 @@
 import FeaturedSection from "../components/FeaturedSection";
 import Counter from "../components/Counter";
 
-function HomePage() {
+export type HomePageProps = {
+    searchText?: string;
+}
+
+function HomePage({ searchText }: HomePageProps) {
+    
     return(
         <>
-            <FeaturedSection />
+            <FeaturedSection searchText={searchText} />
             <Counter onClicking = {() => alert('clicked')} />
         </>
     );

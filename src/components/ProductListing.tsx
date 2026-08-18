@@ -1,14 +1,17 @@
 import products from "../data/products.json";
 import { useParams, Link } from "react-router-dom";
-//import type { ProductType } from "../types/ProductType";
+import {useState} from "react";
 
-// type productProps = {
-//     results?: ProductType[];
-// };
+export type productProps = {
+    searchText?: string;
+}
 
-function ProductListing() {
+function ProductListing({ searchText = ""}: productProps) {
     const { categoryId } = useParams<{ categoryId: string }>();
-    const filteredProducts = categoryId
+    const [sortBy, setSortBy] = useState("");
+
+    // Category filtering
+    let filteredProducts = categoryId
         ? products.filter((product) => product.categoryId === Number(categoryId))
         : products;
 
@@ -16,32 +19,79 @@ function ProductListing() {
     //     filteredProducts = results;
     // }
 
-    return(
+    // Search Filtering
+    if (searchText.trim() !== "") {
+        const search = searchText.toLowerCase().trim();
 
-        <div className="site__product-listing">
-            {filteredProducts.map((product) => (
-                <div className="product-container" key={product.id}>
-                    <div className="image-container">
-                        <Link to={`/category/${product.categoryId}/${product.category}/${product.name}`} >
-                            <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
-                        </Link>
-                    </div>
-                    <div className="product-details">
-                        <div className="product-title">{product.name}</div>
-                        <div className="product-subtitle">{product.description}</div>
-                        <div className="product-unit">
-                            <span className="price">{product.price}</span>
-                            <span className="product-unit">{product.unit}</span>
+        filteredProducts = filteredProducts.filter(
+        (product) =>
+            product.name.toLowerCase().includes(search) ||
+            product.category.toLowerCase().includes(search)
+        );
+    }
+
+    // Sorting
+    filteredProducts = [...filteredProducts].sort((a, b) => {
+        if (sortBy === "price-low") {
+            return a.price - b.price;
+        }
+
+        if (sortBy === "price-high") {
+            return b.price - a.price;
+        }
+
+        if (sortBy === "name") {
+            return a.name.localeCompare(b.name);
+        }
+
+        return 0;
+    });
+
+    const noProducts = filteredProducts.length === 0  ? 1 : 0;
+
+    return(
+        <div>
+            {!noProducts ? 
+            <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+            >
+                <option value="">Sort By</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name: A to Z</option>
+            </select> : null}
+
+            <div className="site__product-listing">
+                {filteredProducts.map((product) => (
+                    <div className="product-container" key={product.id}>
+                        <div className="image-container">
+                            <Link to={`/category/${product.categoryId}/${product.category}/${product.name}`} >
+                                <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
+                            </Link>
                         </div>
-                        <div className="product-rating">{product.rating}</div>
+                        <div className="product-details">
+                            <div className="product-title">{product.name}</div>
+                            <div className="product-subtitle">{product.description}</div>
+                            <div className="product-unit">
+                                <span className="price">₹{product.price} </span>
+                                <span className="product-unit">{product.unit}</span>
+                            </div>
+                            <div className="product-rating">{product.rating}</div>
+                        </div>
+                        <div className="product-add-to-cart">
+                            {/* <form name="cart">                             */}
+                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id}>Add to Cart</button>
+                            {/* </form> */}
+                        </div>
                     </div>
-                    <div className="product-add-to-cart">
-                        {/* <form name="cart">                             */}
-                            <button className="add-to-cart-button" value="Add to Cart" product-id={product.id}>Add to Cart</button>
-                        {/* </form> */}
-                    </div>
-                </div>
-            ))}
+                ))}
+
+                {
+                    filteredProducts.length === 0 && (
+                    <p className="no-products">No products found.</p>
+                )}
+            </div>
         </div>
     );
 }
