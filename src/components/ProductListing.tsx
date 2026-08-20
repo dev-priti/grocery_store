@@ -1,12 +1,14 @@
-import products from "../data/products.json";
 import { useParams, Link } from "react-router-dom";
-import {useState} from "react";
+import { useState } from "react";
+import products from "../data/products.json";
+import type { ProductType } from "../types/ProductType";
 
 export type productProps = {
     searchText?: string;
+    addToCart?: (product: ProductType) => void;
 }
 
-function ProductListing({ searchText = ""}: productProps) {
+function ProductListing({ searchText = "", addToCart }: productProps) {
     const { categoryId } = useParams<{ categoryId: string }>();
     const [sortBy, setSortBy] = useState("");
 
@@ -66,7 +68,7 @@ function ProductListing({ searchText = ""}: productProps) {
                 {filteredProducts.map((product) => (
                     <div className="product-container" key={product.id}>
                         <div className="image-container">
-                            <Link to={`/category/${product.categoryId}/${product.category}/${product.name}`} >
+                            <Link to={`/product/${product.category}/${product.id}/${product.name}`} >
                                 <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
                             </Link>
                         </div>
@@ -81,7 +83,7 @@ function ProductListing({ searchText = ""}: productProps) {
                         </div>
                         <div className="product-add-to-cart">
                             {/* <form name="cart">                             */}
-                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id}>Add to Cart</button>
+                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id} onClick={() => addToCart?.(product)}>Add to Cart</button>
                             {/* </form> */}
                         </div>
                     </div>

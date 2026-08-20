@@ -8,3 +8,8 @@ export type ProductType = {
     unit: string;
     image: string;
 };
+
+export type CartItem = {
+    product: ProductType;
+    quantity: number;
+};

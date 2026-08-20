@@ -3,6 +3,7 @@ export type HeaderProps = {
     name?: string;
     searchText?: string;
     setSearchText: (value: string) => void;
+    cartCount: number;
 }
 
 // export interface HeaderProps = {

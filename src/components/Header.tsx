@@ -27,7 +27,14 @@ function Header(props: HeaderProps) { // OR function Header({greetings, name}: H
                     <img className="search-icon" src={searchIcon} alt="Search Icon" width="60" height="60" style={{ textAlign: 'right' }} onClick = {() => setShowSearch(!showSearch)} />
                 </span>
                 <span><img className="user-icon" src={userIcon} alt="User Icon" width="60" height="60" style={{ textAlign: 'right' }} /></span>
-                <span><img className="bag-icon" src={bagIcon} alt="Shopping Bag Icon" width="60" height="60" style={{ textAlign: 'right' }} /></span>
+                <span>
+                    <Link to = '/cart'>
+                        <img className="bag-icon" src={bagIcon} alt="Shopping Bag Icon" width="60" height="60" style={{ textAlign: 'right' }} />  
+                    </Link>
+                <span className="cart-count">
+                    {props.cartCount}
+                </span>
+                </span>
             </div>
             <div className="site__header-title">
                 <span className="title">Krishna Grocery Store</span>

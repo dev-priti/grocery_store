@@ -1,11 +1,14 @@
 import products from "../data/products.json";
 import {useState} from "react";
+import {Link} from "react-router-dom";
+import type { ProductType } from "../types/ProductType";
 
 export type featureProductProps = {
     searchText?: string;
+    addToCart?: (product: ProductType) => void;
 }
 
-function FeaturedSection({ searchText = ""}: featureProductProps) {
+function FeaturedSection({ searchText = "", addToCart }: featureProductProps) {
     const [sortBy, setSortBy] = useState("");
 
     let featuredProducts = products.filter(product => 
@@ -58,7 +61,9 @@ function FeaturedSection({ searchText = ""}: featureProductProps) {
                 {featuredProducts.map((product) => (
                     <div className="product-container" key={product.id}>
                         <div className="image-container">
-                            <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
+                            <Link to={`/product/${product.category}/${product.id}/${product.name}`} >
+                                <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
+                            </Link>
                         </div>
                         <div className="product-details">
                             <div className="product-title">{product.name}</div>
@@ -71,7 +76,7 @@ function FeaturedSection({ searchText = ""}: featureProductProps) {
                         </div>
                         <div className="product-add-to-cart">
                             {/* <form name="cart">                             */}
-                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id}>Add to Cart</button>
+                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id} onClick={() => addToCart?.(product)}>Add to Cart</button>
                             {/* </form> */}
                         </div>
                     </div>
