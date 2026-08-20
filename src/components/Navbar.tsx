@@ -12,7 +12,7 @@ function Navbar() {
                 categories.map((category) => (
                 <Link
                     key={category.id}
-                    to={`/category/${category.id}`}
+                    to={`/products/${category.id}`}
                     className="gnav-item"
                 >
                     {category.name}
