@@ -4,6 +4,8 @@ export type HeaderProps = {
     searchText?: string;
     setSearchText: (value: string) => void;
     cartCount: number;
+    user: any;
+    setUser: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // export interface HeaderProps = {

@@ -10,6 +10,7 @@ type cartPopupProps = {
 function CartPopup ({product, cartCount, onClose} : cartPopupProps) {
     const navigate = useNavigate();
     const handleViewCart = () => {
+        onClose();
         navigate("/cart");
     };
 

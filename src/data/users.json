@@ -3,6 +3,7 @@
     "id": 1,
     "name": "Demo Customer",
     "email": "demo@example.com",
+    "password": "123456",
     "phone": "+91-9000000000",
     "address": {
       "line1": "12 Market Road",
