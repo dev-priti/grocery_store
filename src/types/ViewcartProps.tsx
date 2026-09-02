@@ -5,4 +5,7 @@ export type ViewcartProps = {
   increaseQuantity: (productId: number) => void;
   decreaseQuantity: (productId: number) => void;
   removeItem: (productId: number) => void;
+  minStock: number;
+  maxStock: number;
+  cartTotal: number,
 };

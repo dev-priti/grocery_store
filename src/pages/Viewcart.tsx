@@ -1,12 +1,14 @@
+import type { ReactElement } from "react";
+import OrderSummary from "../components/Cart/OrderSummary";
 import type { ViewcartProps } from "../types/ViewcartProps";
 
-function ViewCart({ cart, increaseQuantity, decreaseQuantity, removeItem }: ViewcartProps) {
+type OrderSummaryProps = {
+  cartTotal: number;
+};
 
-  const cartTotal = cart.reduce(
-  (total, item) =>
-    total + item.product.price * item.quantity,
-  0
-  );
+const OrderSummaryCard = OrderSummary as unknown as (props: OrderSummaryProps) => ReactElement;
+
+function ViewCart({ cart, increaseQuantity, decreaseQuantity, removeItem, minStock = 1, maxStock = 8, cartTotal }: ViewcartProps) {
 
   return (
     <div>
@@ -22,12 +24,13 @@ function ViewCart({ cart, increaseQuantity, decreaseQuantity, removeItem }: View
 
           <h3>{item.product.name}</h3>
           <p>₹{item.product.price}</p>
-          <p>Quantity: <button onClick={() => decreaseQuantity(item.product.id)}>-</button> {item.quantity} <button onClick={() => increaseQuantity(item.product.id)}>+</button></p>
+          <p>Quantity: <button onClick={() => decreaseQuantity(item.product.id)} disabled={item.quantity <= minStock} >-</button> {item.quantity} <button onClick={() => increaseQuantity(item.product.id)} disabled={item.quantity >= maxStock}>+</button></p>
           <p>₹{item.quantity * item.product.price}</p>
           <p className="remove-product"><button onClick={() => removeItem(item.product.id)}>x</button></p>
         </div>
       ))}
       <h2>Total: ₹{cartTotal}</h2>
+      <OrderSummaryCard cartTotal={cartTotal} />
     </div>
   );
 }

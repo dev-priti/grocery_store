@@ -10,14 +10,16 @@ import ProductListing from "../src/components/ProductListing";
 import Product from "../src/components/Product";
 import type { CartItem, ProductType } from "../src/types/ProductType";
 import CartPopup from "../src/components/Cart/CartPopup";
+import Login from "../src/components/Account/Login";
+import Profile from "../src/components/Account/Profile";
 import Viewcart from "../src/pages/Viewcart";
 
 function App() {
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : []}
-  );
+    return savedCart ? JSON.parse(savedCart) : []})
+  ;
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [addedProduct, setAddedProduct] = useState<ProductType | null>(null);
 
@@ -88,18 +90,34 @@ function App() {
     );
   };
 
+  const cartTotal = cart.reduce(
+  (total, item) =>
+    total + item.product.price * item.quantity,
+  0
+  );
+
+  const minStock = 1;
+  const maxStock = 8;
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart))
   }, [cart]);
 
+  const [user, setUser] = useState(() => {
+      const savedUser = localStorage.getItem("loggedInUser");
+      return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   return(
     <>
     <BrowserRouter>
-      <Header name="Priti" greetings="Hello" searchText={searchText} setSearchText={setSearchText} cartCount={cartCount}/>
+      <Header greetings="Hello" searchText={searchText} setSearchText={setSearchText} cartCount={cartCount} user={user} setUser={setUser} />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage searchText={searchText} addToCart={addToCart} />} />
-        <Route path="/cart" element={<Viewcart cart={cart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeItem={removeItem} />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/cart" element={<Viewcart cart={cart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeItem={removeItem} cartTotal={cartTotal} minStock={minStock} maxStock={maxStock} />} />
         <Route path="/all" element={<ProductListing searchText={searchText} addToCart={addToCart} />} /> 
         {   
           categories.map(category => (
