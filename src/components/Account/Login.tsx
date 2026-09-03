@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AuthUser } from "../../types/User";
 import { Link } from "react-router-dom";
-import { authenticateUser, toAuthUser } from "../../util/auth";
+import { authenticateUser } from "../../util/auth";
 
 type LoginProps = {
     setUser: Dispatch<SetStateAction<AuthUser | null>>;
