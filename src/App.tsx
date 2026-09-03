@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import categories from "../src/data/categories.json";
 import products from "../src/data/products.json";
 import Header from "../src/components/Header";
@@ -11,8 +11,10 @@ import Product from "../src/components/Product";
 import type { CartItem, ProductType } from "../src/types/ProductType";
 import CartPopup from "../src/components/Cart/CartPopup";
 import Login from "../src/components/Account/Login";
+import Register from "../src/components/Account/Register";
 import Profile from "../src/components/Account/Profile";
 import Viewcart from "../src/pages/Viewcart";
+import type { AuthUser } from "./types/User";
 
 function App() {
   const [searchText, setSearchText] = useState("");
@@ -103,7 +105,7 @@ function App() {
     localStorage.setItem("cart", JSON.stringify(cart))
   }, [cart]);
 
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState<AuthUser | null>(() => {
       const savedUser = localStorage.getItem("loggedInUser");
       return savedUser ? JSON.parse(savedUser) : null;
   });
@@ -116,7 +118,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage searchText={searchText} addToCart={addToCart} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/register" element={user ? <Navigate to="/profile" /> : <Register />} />
+        <Route path="/profile" element={user ? <Profile /> : <Login setUser={setUser} />} />
         <Route path="/cart" element={<Viewcart cart={cart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeItem={removeItem} cartTotal={cartTotal} minStock={minStock} maxStock={maxStock} />} />
         <Route path="/all" element={<ProductListing searchText={searchText} addToCart={addToCart} />} /> 
         {   

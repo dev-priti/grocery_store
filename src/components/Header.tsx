@@ -7,6 +7,7 @@ import type { HeaderProps } from "../types/HeaderProps";
 import Search from "./Search";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../util/auth";
 
 /**
  * Header component for site branding and navigation
@@ -18,13 +19,11 @@ function Header(props: HeaderProps) { // OR function Header({greetings, name}: H
 
     const navigate = useNavigate();
     const handleLogout = () => {
-        localStorage.removeItem("loggedInUser");
+        logoutUser();
         props.setUser(null);
         navigate("/login");
     }
 
-    const savedUser = JSON.parse(localStorage.getItem("loggedInUser") ?? "{}");
-    //const userName = savedUser?.name;
     const userName = props.user?.name;
     return(
         <div className="site__header-container">
@@ -43,7 +42,7 @@ function Header(props: HeaderProps) { // OR function Header({greetings, name}: H
                     <img className="search-icon" src={searchIcon} alt="Search Icon" width="60" height="60" style={{ textAlign: 'right' }} onClick = {() => setShowSearch(!showSearch)} />
                 </span>
                 <span>
-                    <Link to = '/login'>
+                    <Link to = {props.user ? '/profile' : '/login'}>
                         <img className="user-icon" src={userIcon} alt="User Icon" width="60" height="60" style={{ textAlign: 'right' }} />
                     </Link>
                 </span>
