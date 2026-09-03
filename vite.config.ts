@@ -8,5 +8,5 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-  base: '/dev-priti/grocery_store/',
+  base: '/grocery_store/',
 })
