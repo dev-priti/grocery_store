@@ -24,8 +24,6 @@ function Header(props: HeaderProps) { // OR function Header({greetings, name}: H
         navigate("/login");
     }
 
-    const savedUser = JSON.parse(localStorage.getItem("loggedInUser") ?? "{}");
-    //const userName = savedUser?.name;
     const userName = props.user?.name;
     return(
         <div className="site__header-container">

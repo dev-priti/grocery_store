@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AuthUser } from "../../types/User";
 import { Link } from "react-router-dom";
 import { authenticateUser, toAuthUser } from "../../util/auth";
@@ -17,7 +17,7 @@ function Login({ setUser }: LoginProps) {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!email.trim()) {
@@ -33,7 +33,6 @@ function Login({ setUser }: LoginProps) {
         const user = authenticateUser(email, password);
 
         if (user) {
-            const authUser = toAuthUser(user);
             setUser(user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             navigate("/profile");
