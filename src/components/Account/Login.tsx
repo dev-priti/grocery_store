@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AuthUser } from "../../types/User";
 import { Link } from "react-router-dom";
-import { authenticateUser } from "../../util/auth";
+//import { authenticateUser } from "../../util/auth";
 
 type LoginProps = {
     setUser: Dispatch<SetStateAction<AuthUser | null>>;
@@ -17,7 +17,7 @@ function Login({ setUser }: LoginProps) {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!email.trim()) {
@@ -30,15 +30,30 @@ function Login({ setUser }: LoginProps) {
             return;
         }
 
-        const user = authenticateUser(email, password);
+        // const user = authenticateUser(email, password); // React code
 
-        if (user) {
-            setUser(user);
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-            navigate("/profile");
-        } else {
-            alert("Invalid email or password");
+        const response = await fetch("http://localhost:3000/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+            return;
         }
+
+        setUser(data.user);
+        localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
+        navigate("/profile");
     };
 
     return(

@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
-import products from "../data/products.json";
+import { useEffect, useState } from "react";
+// import products from "../data/products.json";
 import type { ProductType } from "../types/ProductType";
 
 export type productProps = {
@@ -11,6 +11,16 @@ export type productProps = {
 function ProductListing({ searchText = "", addToCart }: productProps) {
     const { categoryId } = useParams<{ categoryId: string }>();
     const [sortBy, setSortBy] = useState("");
+    const [products, setProducts] = useState<ProductType[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const response = await fetch("http://localhost:3000/api/products");
+            const data = await response.json();
+            setProducts(data);
+        };
+        fetchProducts();
+    }, [])
 
     // Category filtering
     let filteredProducts = categoryId

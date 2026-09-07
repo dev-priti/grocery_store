@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import type { User } from "../../types/User";
-import { getAllUsers, saveUser } from "../../util/auth";
+//import type { User } from "../../types/User";
+// import { getAllUsers, saveUser } from "../../util/auth"; // React authentication
 
 function Register() {
     const [name, setName] = useState("");
@@ -12,7 +12,7 @@ function Register() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -40,32 +40,57 @@ function Register() {
             return;
         }
 
-        const allUsers = getAllUsers();
-        const maxId = allUsers.reduce(
-        (max: number, user: User) => Math.max(max, user.id),
-        0
-        );
-        const newUser = {
-            id: maxId + 1,
-            name,
-            email,
-            password,
-        };
+        // const allUsers = getAllUsers(); React authentication
+        //const maxId = allUsers.reduce(
+        // (max: number, user: User) => Math.max(max, user.id),
+        // 0
+        // );
+        // const newUser = {
+        //     id: maxId + 1,
+        //     name,
+        //     email,
+        //     password,
+        // };
     
 
-        saveUser(newUser);
-    
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setShowConfirmPassword(false);
+        //saveUser(newUser);
 
-        console.log("New user:", newUser);
-        navigate("/login");
-        alert("Account created successfully!");
+        try {
+            const response = await fetch("http://localhost:3000/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                }),            
+            });
 
-    };
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message);
+                return;
+            }        
+        
+            //saveUser(newUser);
+
+            setName("");
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            setShowConfirmPassword(false);
+
+            //console.log("New user:", newUser);
+            navigate("/login");
+            alert("Account created successfully!");
+        } catch (error) {
+            console.error("Registration failed:", error);
+            alert("Unable to connect to the server");
+        }
+    }
 
     return (
         <div className="register-container">

@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import categories from "../src/data/categories.json";
+//import categories from "../src/data/categories.json";
+import type { CategoryType } from "./types/Category";
 import products from "../src/data/products.json";
 import Header from "../src/components/Header";
 import Navbar from "../src/components/Navbar";
@@ -12,18 +13,21 @@ import type { CartItem, ProductType } from "../src/types/ProductType";
 import CartPopup from "../src/components/Cart/CartPopup";
 import Login from "../src/components/Account/Login";
 import Register from "../src/components/Account/Register";
-import Profile from "../src/components/Account/Profile";
+import Profile from "./pages/Profile";
 import Viewcart from "../src/pages/Viewcart";
 import type { AuthUser } from "./types/User";
 
 function App() {
   const [searchText, setSearchText] = useState("");
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [cart, setCart] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : []})
   ;
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [addedProduct, setAddedProduct] = useState<ProductType | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   const addToCart = (product: ProductType) => {
     setCart((prevCart) => {
@@ -105,21 +109,73 @@ function App() {
     localStorage.setItem("cart", JSON.stringify(cart))
   }, [cart]);
 
-  const [user, setUser] = useState<AuthUser | null>(() => {
-      const savedUser = localStorage.getItem("loggedInUser");
-      return savedUser ? JSON.parse(savedUser) : null;
-  });
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
 
+      if (!token) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/auth/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          localStorage.removeItem("token");
+          return;
+        }
+
+        const data = await response.json();
+        setUser(data.user);
+        setAuthLoading(false);
+      } catch (error) {
+        setAuthLoading(false);
+        console.error("Failed to restore login:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+      const fetchCategories = async () => {
+          const response = await fetch(
+              "http://localhost:3000/api/categories"
+          );
+
+          const data = await response.json();
+
+          setCategories(data);
+      };
+
+      fetchCategories();
+  }, []);
+
+  if (authLoading) {
+    return <div>Loading...</div>;
+  }
+  
   return(
     <>
-    <BrowserRouter>
+    <BrowserRouter basename="/grocery_store">
       <Header greetings="Hello" searchText={searchText} setSearchText={setSearchText} cartCount={cartCount} user={user} setUser={setUser} />
-      <Navbar />
+      <Navbar categories={categories} />
       <Routes>
         <Route path="/" element={<HomePage searchText={searchText} addToCart={addToCart} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={user ? <Navigate to="/profile" /> : <Register />} />
-        <Route path="/profile" element={user ? <Profile /> : <Login setUser={setUser} />} />
+        <Route
+          path="/profile"
+          element={user ? <Profile user={user} /> : <Login setUser={setUser} />}
+        />
         <Route path="/cart" element={<Viewcart cart={cart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeItem={removeItem} cartTotal={cartTotal} minStock={minStock} maxStock={maxStock} />} />
         <Route path="/all" element={<ProductListing searchText={searchText} addToCart={addToCart} />} /> 
         {   
