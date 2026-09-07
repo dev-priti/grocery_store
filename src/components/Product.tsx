@@ -1,6 +1,7 @@
-import products from "../data/products.json";
+//import products from "../data/products.json";
 import { useParams } from "react-router-dom";
 import type { ProductType } from "../types/ProductType";
+import { useEffect, useState } from "react";
 
 export type productProps = {
     //searchText?: string;
@@ -10,6 +11,21 @@ export type productProps = {
 //function ProductListing({id, name} : categoryProp ) {
 function Product ({ addToCart }: productProps) {
     const { productId } = useParams<{productId: string}>();
+    const [products, setProducts] = useState<ProductType[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const response = await fetch(
+                "http://localhost:3000/api/products"
+            );
+
+            const data = await response.json();
+
+            setProducts(data);
+        };
+
+        fetchProducts();
+    }, []);
 
     const filteredProducts = productId ? products.filter(product => product.id === Number(productId)) : products;
 

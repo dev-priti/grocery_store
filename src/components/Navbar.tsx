@@ -1,8 +1,8 @@
 import {Link} from "react-router-dom";
-import categories from "../data/categories.json";
+//import categories from "../data/categories.json";
+import type { CategoryType } from "../types/Category";
 
-
-function Navbar() {
+function Navbar({ categories }: { categories: CategoryType[] }) {
     return(
         <nav className="site__navbar">
             <Link to="/all" className="gnav-item">

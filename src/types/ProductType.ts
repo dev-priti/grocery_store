@@ -7,6 +7,8 @@ export type ProductType = {
     price: number;
     unit: string;
     image: string;
+    rating: number;
+    featuredProduct: number;
 };
 
 export type CartItem = {

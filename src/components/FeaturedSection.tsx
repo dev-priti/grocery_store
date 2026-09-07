@@ -1,7 +1,7 @@
-import products from "../data/products.json";
-import {useState} from "react";
+//import products from "../data/products.json";
 import {Link} from "react-router-dom";
 import type { ProductType } from "../types/ProductType";
+import { useEffect, useState } from "react";
 
 export type featureProductProps = {
     searchText?: string;
@@ -10,6 +10,21 @@ export type featureProductProps = {
 
 function FeaturedSection({ searchText = "", addToCart }: featureProductProps) {
     const [sortBy, setSortBy] = useState("");
+    const [products, setProducts] = useState<ProductType[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const response = await fetch(
+                "http://localhost:3000/api/products"
+            );
+
+            const data = await response.json();
+
+            setProducts(data);
+        };
+
+        fetchProducts();
+    }, []);
 
     let featuredProducts = products.filter(product => 
         product.featuredProduct === 1
