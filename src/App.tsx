@@ -1,10 +1,10 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 //import categories from "../src/data/categories.json";
 import type { CategoryType } from "./types/Category";
 import products from "../src/data/products.json";
 import Header from "../src/components/Header";
-import Navbar from "../src/components/Navbar";
+import Navbar from "./components/MyNavbar";
 import Footer from "../src/components/Footer";
 import HomePage from "./pages/HomePage";
 import ProductListing from "../src/components/ProductListing";
@@ -24,8 +24,8 @@ function App() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [cart, setCart] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : []})
-  ;
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [addedProduct, setAddedProduct] = useState<ProductType | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -35,75 +35,69 @@ function App() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        alert("Please login to add items to cart");
-        return;
+      alert("Please login to add items to cart");
+      return;
     }
 
     try {
-        const response = await fetch(
-            "http://localhost:3000/api/cart/items",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    productId: product.id,
-                    quantity: 1,
-                }),
-            }
-        );
+      const response = await fetch("http://localhost:3000/api/cart/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-            alert(data.message);
-            return;
-        }
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
 
-        await syncCartFromBackend(data.cart.items);
-        setAddedProduct(product);
-        setShowCartPopup(true);
+      await syncCartFromBackend(data.cart.items);
+      setAddedProduct(product);
+      setShowCartPopup(true);
     } catch (error) {
-        console.error("Add to cart error:", error);
+      console.error("Add to cart error:", error);
     }
-} ;
+  };
 
-  const syncCartFromBackend = async (backendItems: {
-    productId: number;
-    quantity: number;
-}[]) => {
-    const response = await fetch(
-        "http://localhost:3000/api/products"
-    );
+  const syncCartFromBackend = async (
+    backendItems: {
+      productId: number;
+      quantity: number;
+    }[],
+  ) => {
+    const response = await fetch("http://localhost:3000/api/products");
 
     const products: ProductType[] = await response.json();
 
     const updatedCart: CartItem[] = backendItems
-        .map(item => {
-            const product = products.find(
-                product => product.id === item.productId
-            );
+      .map((item) => {
+        const product = products.find(
+          (product) => product.id === item.productId,
+        );
 
-            if (!product) {
-                return null;
-            }
+        if (!product) {
+          return null;
+        }
 
-            return {
-                product,
-                quantity: item.quantity,
-            };
-        })
-        .filter((item): item is CartItem => item !== null);
+        return {
+          product,
+          quantity: item.quantity,
+        };
+      })
+      .filter((item): item is CartItem => item !== null);
 
     setCart(updatedCart);
   };
 
-  const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   // const decreaseQuantity = async (productId: number) => {
   //     const token = localStorage.getItem("token");
@@ -202,56 +196,50 @@ function App() {
   //     }
   // };
 
-  const changeQuantity = async (
-    productId: number,
-    change: number
-) => {
+  const changeQuantity = async (productId: number, change: number) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        return;
+      return;
     }
 
-    const item = cart.find(
-        item => item.product.id === productId
-    );
+    const item = cart.find((item) => item.product.id === productId);
 
     if (!item) {
-        return;
+      return;
     }
 
     const newQuantity = item.quantity + change;
 
     if (newQuantity < 1) {
-        return;
+      return;
     }
 
     try {
-        const response = await fetch(
-            `http://localhost:3000/api/cart/items/${productId}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    quantity: newQuantity,
-                }),
-            }
-        );
+      const response = await fetch(
+        `http://localhost:3000/api/cart/items/${productId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            quantity: newQuantity,
+          }),
+        },
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-            alert(data.message);
-            return;
-        }
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
 
-        await syncCartFromBackend(data.cart.items);
-
+      await syncCartFromBackend(data.cart.items);
     } catch (error) {
-        console.error("Change quantity error:", error);
+      console.error("Change quantity error:", error);
     }
   };
   // const removeItem = (productId: number) => {
@@ -267,38 +255,36 @@ function App() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        return;
+      return;
     }
 
     try {
-        const response = await fetch(
-            `http://localhost:3000/api/cart/items/${productId}`,
-            {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+      const response = await fetch(
+        `http://localhost:3000/api/cart/items/${productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-            alert(data.message);
-            return;
-        }
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
 
-        await syncCartFromBackend(data.cart.items);
-
+      await syncCartFromBackend(data.cart.items);
     } catch (error) {
-        console.error("Remove cart item error:", error);
+      console.error("Remove cart item error:", error);
     }
   };
 
   const cartTotal = cart.reduce(
-  (total, item) =>
-    total + item.product.price * item.quantity,
-  0
+    (total, item) => total + item.product.price * item.quantity,
+    0,
   );
 
   const minStock = 1;
@@ -306,8 +292,8 @@ function App() {
 
   useEffect(() => {
     if (!user) {
-        localStorage.removeItem("cart");
-        return;
+      localStorage.removeItem("cart");
+      return;
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -323,14 +309,11 @@ function App() {
       }
 
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/auth/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:3000/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           localStorage.removeItem("token");
@@ -352,119 +335,145 @@ function App() {
 
   useEffect(() => {
     if (!user) {
-        return;
+      return;
     }
 
     const fetchCart = async () => {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        if (!token) {
-            return;
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error(data.message);
+          return;
         }
 
-        try {
-          const response = await fetch(
-              "http://localhost:3000/api/cart",
-              {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              }
-          );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.error(data.message);
-                return;
-            }
-
-            if (data) {
-                await syncCartFromBackend(data.items);
-            }
-        } catch (error) {
-            console.error("Failed to fetch cart:", error);
+        if (data) {
+          await syncCartFromBackend(data.items);
         }
+      } catch (error) {
+        console.error("Failed to fetch cart:", error);
+      }
     };
 
     fetchCart();
   }, [user]);
 
   useEffect(() => {
-      const fetchCategories = async () => {
-          const response = await fetch(
-              "http://localhost:3000/api/categories"
-          );
+    const fetchCategories = async () => {
+      const response = await fetch("http://localhost:3000/api/categories");
 
-          const data = await response.json();
+      const data = await response.json();
 
-          setCategories(data);
-      };
+      setCategories(data);
+    };
 
-      fetchCategories();
+    fetchCategories();
   }, []);
 
   if (authLoading) {
     return <div>Loading...</div>;
   }
-  
-  return(
+
+  return (
     <>
-    <BrowserRouter basename="/grocery_store">
-      <Header greetings="Hello" searchText={searchText} setSearchText={setSearchText} cartCount={cartCount} user={user} setUser={setUser} setCart={setCart} />
-      <Navbar categories={categories} />
-      <Routes>
-        <Route path="/" element={<HomePage searchText={searchText} addToCart={addToCart} />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/register" element={user ? <Navigate to="/profile" /> : <Register />} />
-        <Route
-          path="/profile"
-          element={user ? <Profile user={user} /> : <Login setUser={setUser} />}
+      <BrowserRouter basename="/grocery_store">
+        <Header
+          greetings="Hello"
+          searchText={searchText}
+          setSearchText={setSearchText}
+          cartCount={cartCount}
+          user={user}
+          setUser={setUser}
+          setCart={setCart}
         />
-        <Route path="/cart" element={<Viewcart cart={cart} changeQuantity={changeQuantity} removeItem={removeItem} cartTotal={cartTotal} minStock={minStock} maxStock={maxStock} />} />
-        <Route path="/all" element={<ProductListing searchText={searchText} addToCart={addToCart} />} /> 
-        {    
-          categories.map(category => (
-            <Route 
+        <Navbar categories={categories} />
+        <Routes>
+          <Route
+            path="/"
+            element={<HomePage searchText={searchText} addToCart={addToCart} />}
+          />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/profile" /> : <Register />}
+          />
+          <Route
+            path="/profile"
+            element={
+              user ? <Profile user={user} /> : <Login setUser={setUser} />
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <Viewcart
+                cart={cart}
+                changeQuantity={changeQuantity}
+                removeItem={removeItem}
+                cartTotal={cartTotal}
+                minStock={minStock}
+                maxStock={maxStock}
+              />
+            }
+          />
+          <Route
+            path="/all"
+            element={
+              <ProductListing searchText={searchText} addToCart={addToCart} />
+            }
+          />
+          {categories.map((category) => (
+            <Route
               key={category.id}
               path="/products/:categoryId" // :categoryId can be any variable like :id
-              element={<ProductListing searchText={searchText} addToCart={addToCart}/>}
+              element={
+                <ProductListing searchText={searchText} addToCart={addToCart} />
+              }
             />
-          )) 
-        }
-        {
-          products.map(product => (
-            <Route 
+          ))}
+          {products.map((product) => (
+            <Route
               key={product.id}
               path="/product/:categoryName/:productId/:productName"
               element={<Product addToCart={addToCart} />}
             />
-          )) 
-        }
-        {   
-          // <Route 
-          //   key={cart.id}
-          //   path="/cart"
-          //   element={<Viewcart />}
-          // />
-        }
-        <Route path="/orders" element={<Orders />} />
-        <Route
-        path="/orders/:orderId"
-        element={user ? <OrderDetails /> : <Login setUser={setUser} />}
-        />
-      </Routes>
+          ))}
+          {
+            // <Route
+            //   key={cart.id}
+            //   path="/cart"
+            //   element={<Viewcart />}
+            // />
+          }
+          <Route path="/orders" element={<Orders />} />
+          <Route
+            path="/orders/:orderId"
+            element={user ? <OrderDetails /> : <Login setUser={setUser} />}
+          />
+        </Routes>
 
-      {showCartPopup && addedProduct && (
-        <CartPopup
-          product={addedProduct}
-          cartCount={cartCount}
-          onClose={() => setShowCartPopup(false)}
-        />
-      )}
-    </BrowserRouter>
-    <Footer />
-    {/* <pre>Product that got added
+        {showCartPopup && addedProduct && (
+          <CartPopup
+            product={addedProduct}
+            cartCount={cartCount}
+            onClose={() => setShowCartPopup(false)}
+          />
+        )}
+      </BrowserRouter>
+      <Footer />
+      {/* <pre>Product that got added
   {JSON.stringify(cart, null, 2)}
 </pre> */}
     </>
