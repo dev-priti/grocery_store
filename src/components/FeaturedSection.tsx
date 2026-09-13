@@ -19,7 +19,7 @@ function FeaturedSection({ searchText = "", addToCart }: featureProductProps) {
             );
 
             const data = await response.json();
-
+            console.log("Products API response:", data);
             setProducts(data);
         };
 

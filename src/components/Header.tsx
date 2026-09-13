@@ -21,6 +21,7 @@ function Header(props: HeaderProps) { // OR function Header({greetings, name}: H
     const handleLogout = () => {
         logoutUser();
         props.setUser(null);
+        props.setCart([]);
         navigate("/login");
     }
 

@@ -171,3 +171,159 @@ code {
   max-width: 500px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
+.order-details {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 24px;
+}
+
+.order-details-title {
+    margin-bottom: 24px;
+    font-size: 32px;
+}
+
+/* Order summary */
+
+.order-summary {
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.order-summary p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+/* Items section */
+
+.order-details h2 {
+    margin-bottom: 16px;
+}
+
+/* Individual item */
+
+.order-item {
+    padding: 18px;
+    margin-bottom: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.order-item-name {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.order-item p {
+    margin: 6px 0;
+}
+
+/* Loading */
+
+.order-details-loading {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 18px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .order-details {
+        margin: 20px auto;
+        padding: 16px;
+    }
+
+    .order-details-title {
+        font-size: 26px;
+    }
+
+    .order-summary,
+    .order-item {
+        padding: 16px;
+    }
+}
+
+.order-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.order-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+}
+
+.order-items-table th,
+.order-items-table td {
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.order-items-table th {
+    font-weight: 600;
+}
+
+.order-product {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.order-product-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .order-items-table th,
+    .order-items-table td {
+        padding: 10px 6px;
+        font-size: 14px;
+    }
+
+    .order-product-image {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.back-orders-button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.back-orders-button:hover {
+    text-decoration: underline;
+}
