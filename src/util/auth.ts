@@ -41,6 +41,6 @@
 // }
 
 export function logoutUser(): void {
-  localStorage.removeItem("loggedInUser");
+  //localStorage.removeItem("loggedInUser");
   localStorage.removeItem("token");
 }

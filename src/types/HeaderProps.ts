@@ -1,4 +1,5 @@
 import type { AuthUser } from "./User";
+import type { CartItem } from "./ProductType";
 
 export type HeaderProps = {
     greetings?: string;
@@ -8,6 +9,7 @@ export type HeaderProps = {
     cartCount: number;
     user: AuthUser | null;
     setUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 // export interface HeaderProps = {

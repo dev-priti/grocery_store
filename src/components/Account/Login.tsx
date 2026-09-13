@@ -51,7 +51,7 @@ function Login({ setUser }: LoginProps) {
         }
 
         setUser(data.user);
-        localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+        // localStorage.setItem("loggedInUser", JSON.stringify(data.user));
         localStorage.setItem("token", data.token);
         navigate("/profile");
     };
