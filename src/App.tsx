@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { CategoryType } from "./types/Category";
 import products from "../src/data/products.json";
 import Header from "../src/components/Header";
-import Navbar from "../src/components/Navbar";
+import Navbar from "../src/components/MyNavbar";
 import Footer from "../src/components/Footer";
 import HomePage from "./pages/HomePage";
 import ProductListing from "../src/components/ProductListing";
@@ -18,6 +18,8 @@ import Viewcart from "../src/pages/Viewcart";
 import type { AuthUser } from "./types/User";
 import Orders from "../src/components/Account/Orders";
 import OrderDetails from "../src/components/Account/OrderDetails";
+import Checkout from "./pages/Delivery";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 function App() {
   const [searchText, setSearchText] = useState("");
@@ -452,6 +454,12 @@ function App() {
         <Route
         path="/orders/:orderId"
         element={user ? <OrderDetails /> : <Login setUser={setUser} />}
+        />
+        <Route path="/checkout" 
+          element={user ? <Checkout cart={cart} setCart={setCart} /> : <Login setUser={setUser} />}
+        />
+        <Route path="/confirm/:orderId" 
+          element={user ? <OrderConfirmation/> : <Login setUser={setUser} />}
         />
       </Routes>
 

@@ -4,13 +4,64 @@ const Order = require("../models/Order");
 const authMiddleware = require("../middleware/authMiddleware");
 const Cart = require("../models/Cart");
 const mongoose = require("mongoose");
+const Address = require("../models/Address");
 
 const router = express.Router();
 
 router.post("/", authMiddleware, async (req, resp) => {
     const session = await mongoose.startSession();
+    const {
+        shippingAddressId,
+        billingAddressId,
+        shippingMethod,
+        paymentMethod,
+    } = req.body;
+
     try {
         // const { items } = req.body;
+
+        if (
+            !shippingAddressId ||
+            !billingAddressId
+        ) {
+            return resp.status(400).json({
+                message: "Shipping and billing address are required",
+            });
+        }
+
+        const shippingAddress = await Address.findOne({
+            _id: shippingAddressId,
+            userId: req.userId,
+        });
+
+        const billingAddress = await Address.findOne({
+            _id: billingAddressId,
+            userId: req.userId,
+        });
+
+        if (!shippingAddress) {
+            return resp.status(400).json({
+                message: "Invalid shipping address",
+            });
+        }
+
+        if (!billingAddress) {
+            return resp.status(400).json({
+                message: "Invalid billing address",
+            });
+        }
+
+        if (!["standard", "express"].includes(shippingMethod)) {
+            return resp.status(400).json({
+                message: "Invalid shipping method",
+            });
+        }
+
+        if (paymentMethod !== "cod") {
+            return resp.status(400).json({
+                message: "Invalid payment method",
+            });
+        }
 
         session.startTransaction();
 
@@ -84,6 +135,7 @@ router.post("/", authMiddleware, async (req, resp) => {
                 priceAtPurchase: product.price,
                 discountedPrice: product.price,
                 itemSubtotal,
+                image: product.image,
             };
         });
 
@@ -94,8 +146,8 @@ router.post("/", authMiddleware, async (req, resp) => {
 
         const discount = 0;
         const tax = 0;
-        const shippingPrice = 0;
-
+        const shippingPrice =
+            shippingMethod === "express" ? 100 : 50;
         const totalPrice = subtotal - discount + tax + shippingPrice;
 
         // Creating transaction. Suppose when the order is created, API fails to reduce the stock. Then it will give incorrect results.
@@ -110,7 +162,12 @@ router.post("/", authMiddleware, async (req, resp) => {
                     tax,
                     shippingPrice,
                     totalPrice,
-                    image: product.image,
+                    shippingAddressId,
+                    billingAddressId,
+                    shippingMethod,
+                    paymentMethod,
+                    paymentStatus: "pending",
+                    orderStatus: "pending",
                 },
             ],
             { session }
@@ -165,7 +222,9 @@ router.get("/:orderId", authMiddleware, async (req, resp) => {
         const order = await Order.findOne({
             _id: req.params.orderId,
             userId: req.userId,
-        });
+        })
+        .populate("shippingAddressId")
+        .populate("billingAddressId");
 
         if (!order) {
             return resp.status(404).json({

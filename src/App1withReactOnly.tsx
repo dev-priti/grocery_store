@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { CategoryType } from "./types/Category";
 import products from "../src/data/products.json";
 import Header from "../src/components/Header";
-import Navbar from "../src/components/Navbar";
+import Navbar from "./components/MyNavbar";
 import Footer from "../src/components/Footer";
 import HomePage from "./pages/HomePage";
 import ProductListing from "../src/components/ProductListing";

@@ -76,7 +76,7 @@ function Login({ setUser }: LoginProps) {
                             </button>
                         </div>
                         <div className="login-submit">
-                            <input type="submit" className="submit-field" name="Submit" value="Submit" ></input>
+                            <button className="submit-field" name="Submit">Login</button>
                         </div>
                     </form>
                     <Link to="/register">

@@ -82,10 +82,24 @@ const orderSchema = new mongoose.Schema(
 
         shippingAddressId: {
             type: mongoose.Schema.Types.ObjectId,
+             ref: "Address",
         },
 
         billingAddressId: {
             type: mongoose.Schema.Types.ObjectId,
+             ref: "Address",
+        },
+
+        shippingMethod: {
+            type: String,
+            enum: ["standard", "express"],
+            required: true,
+        },
+
+        paymentMethod: {
+            type: String,
+            enum: ["cod"],
+            required: true,
         },
 
         paymentId: {
@@ -108,6 +122,50 @@ const orderSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+    }
+);
+
+const addressSnapshotSchema = new mongoose.Schema(
+    {
+        firstName: {
+            type: String,
+            required: true,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        phone: {
+            type: String,
+            required: true,
+        },
+        addressLine1: {
+            type: String,
+            required: true,
+        },
+        addressLine2: {
+            type: String,
+            default: "",
+        },
+        city: {
+            type: String,
+            required: true,
+        },
+        state: {
+            type: String,
+            required: true,
+        },
+        postalCode: {
+            type: String,
+            required: true,
+        },
+        country: {
+            type: String,
+            default: "India",
+        },
+    },
+    {
+        _id: false,
     }
 );
 

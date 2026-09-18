@@ -1,111 +1,94 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import products from "../data/products.json";
 import type { ProductType } from "../types/ProductType";
 
+import ProductDisplayCard from "./ProductDisplayCard";
+
 export type productProps = {
-    searchText?: string;
-    addToCart?: (product: ProductType) => void;
-}
+  searchText?: string;
+  addToCart?: (product: ProductType) => void;
+};
 
 function ProductListing({ searchText = "", addToCart }: productProps) {
-    const { categoryId } = useParams<{ categoryId: string }>();
-    const [sortBy, setSortBy] = useState("");
-    const [products, setProducts] = useState<ProductType[]>([]);
+  const { categoryId } = useParams<{ categoryId: string }>();
+  const [sortBy, setSortBy] = useState("");
+  const [products, setProducts] = useState<ProductType[]>([]);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            const response = await fetch("http://localhost:3000/api/products");
-            const data = await response.json();
-            setProducts(data);
-        };
-        fetchProducts();
-    }, [])
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await fetch("http://localhost:3000/api/products");
+      const data = await response.json();
+      setProducts(data);
+    };
+    fetchProducts();
+  }, []);
 
-    // Category filtering
-    let filteredProducts = categoryId
-        ? products.filter((product) => product.categoryId === Number(categoryId))
-        : products;
+  // Category filtering
+  let filteredProducts = categoryId
+    ? products.filter((product) => product.categoryId === Number(categoryId))
+    : products;
 
-    // if (results && results.length > 0) {
-    //     filteredProducts = results;
-    // }
+  // if (results && results.length > 0) {
+  //     filteredProducts = results;
+  // }
 
-    // Search Filtering
-    if (searchText.trim() !== "") {
-        const search = searchText.toLowerCase().trim();
+  // Search Filtering
+  if (searchText.trim() !== "") {
+    const search = searchText.toLowerCase().trim();
 
-        filteredProducts = filteredProducts.filter(
-        (product) =>
-            product.name.toLowerCase().includes(search) ||
-            product.category.toLowerCase().includes(search)
-        );
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(search) ||
+        product.category.toLowerCase().includes(search),
+    );
+  }
+
+  // Sorting
+  filteredProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === "price-low") {
+      return a.price - b.price;
     }
 
-    // Sorting
-    filteredProducts = [...filteredProducts].sort((a, b) => {
-        if (sortBy === "price-low") {
-            return a.price - b.price;
-        }
+    if (sortBy === "price-high") {
+      return b.price - a.price;
+    }
 
-        if (sortBy === "price-high") {
-            return b.price - a.price;
-        }
+    if (sortBy === "name") {
+      return a.name.localeCompare(b.name);
+    }
 
-        if (sortBy === "name") {
-            return a.name.localeCompare(b.name);
-        }
+    return 0;
+  });
 
-        return 0;
-    });
+  const noProducts = filteredProducts.length === 0 ? 1 : 0;
 
-    const noProducts = filteredProducts.length === 0  ? 1 : 0;
+  return (
+    <div>
+      {!noProducts ? (
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="">Sort By</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="name">Name: A to Z</option>
+        </select>
+      ) : null}
 
-    return(
-        <div>
-            {!noProducts ? 
-            <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-            >
-                <option value="">Sort By</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="name">Name: A to Z</option>
-            </select> : null}
+      <div className="site__product-listing">
+        {filteredProducts.map((product) => (
+          <ProductDisplayCard
+            key={product.id}
+            product={product}
+            addToCart={addToCart}
+          />
+        ))}
 
-            <div className="site__product-listing">
-                {filteredProducts.map((product) => (
-                    <div className="product-container" key={product.id}>
-                        <div className="image-container">
-                            <Link to={`/product/${product.category}/${product.id}/${product.name}`} >
-                                <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
-                            </Link>
-                        </div>
-                        <div className="product-details">
-                            <div className="product-title">{product.name}</div>
-                            <div className="product-subtitle">{product.description}</div>
-                            <div className="product-unit">
-                                <span className="price">₹{product.price} </span>
-                                <span className="product-unit">{product.unit}</span>
-                            </div>
-                            <div className="product-rating">{product.rating}</div>
-                        </div>
-                        <div className="product-add-to-cart">
-                            {/* <form name="cart">                             */}
-                                <button className="add-to-cart-button" value="Add to Cart" product-id={product.id} onClick={() => addToCart?.(product)}>Add to Cart</button>
-                            {/* </form> */}
-                        </div>
-                    </div>
-                ))}
-
-                {
-                    filteredProducts.length === 0 && (
-                    <p className="no-products">No products found.</p>
-                )}
-            </div>
-        </div>
-    );
+        {filteredProducts.length === 0 && (
+          <p className="no-products">No products found.</p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default ProductListing;

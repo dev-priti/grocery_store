@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import OrderSummary from "../components/Cart/OrderSummary";
 import type { ViewcartProps } from "../types/ViewcartProps";
+import { useNavigate } from "react-router-dom";
 
 type OrderSummaryProps = {
   cartTotal: number;
@@ -10,6 +11,7 @@ const OrderSummaryCard = OrderSummary as unknown as (props: OrderSummaryProps) =
 
 function ViewCart({ cart, changeQuantity, removeItem, minStock = 1, maxStock = 8, cartTotal }: ViewcartProps) {
 
+  const navigate = useNavigate();
   return (
     <div>
       <h1>Your Cart</h1>
@@ -33,6 +35,9 @@ function ViewCart({ cart, changeQuantity, removeItem, minStock = 1, maxStock = 8
           ))}
           <h2>Total: ₹{cartTotal}</h2>
           <OrderSummaryCard cartTotal={cartTotal} />
+          <div>
+            <button className="checkout-button" onClick={() => navigate("/checkout")}>Checkout</button>
+          </div>
         </>
       ) : <h2>There are no products in the bag. Please add some products to continue.</h2>}
     </div>
