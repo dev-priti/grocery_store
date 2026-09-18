@@ -1,32 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import { Order } from "../../types/OrderProps";
-
-type Order = {
-    _id: string;
-    totalPrice: number;
-    paymentStatus: string;
-    orderStatus: string;
-    createdAt: string;
-    items: {
-        productId: number;
-        itemName: string;
-        quantity: number;
-        priceAtPurchase: number;
-        itemSubtotal: number;
-        image?: string;
-    }[];
-};
+import type { Order } from "../../types/Order";
+import type { Address } from "../../types/Address";
 
 function OrderDetails() {
     const { orderId } = useParams();
     const [order, setOrder] = useState<Order | null>(null);
+    const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
+    const [billingAddress, setBillingAddress] = useState<Address | null>(null);
     const navigate = useNavigate();
-
+ 
     useEffect(() => {
         const fetchOrderDetails = async () => {
             const token = localStorage.getItem("token");
-
             if (!token || !orderId) {
                 return;
             }
@@ -43,10 +29,45 @@ function OrderDetails() {
             const data = await response.json();
 
             if(!response.ok) {
-                console.error("data.message");
+                console.error(data.message);
+            }
+
+            const shippingAddressResponse = await fetch(
+                `http://localhost:3000/api/addresses/${data?.shippingAddressId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                }               
+            );
+
+            const shippingAddressData = await shippingAddressResponse.json();
+
+            if(!shippingAddressResponse.ok) {
+                console.error(shippingAddressData.message);
+            }
+
+            const billingAddressResponse = await fetch(
+                `http://localhost:3000/api/addresses/${data?.billingAddressId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                }               
+            );
+
+            const billingAddressData = await billingAddressResponse.json();
+
+            if(!billingAddressResponse.ok) {
+                console.error(billingAddressData.message);
             }
 
             setOrder(data);
+            setShippingAddress(shippingAddressData);
+            setBillingAddress(billingAddressData);
+
+            console.log(shippingAddressData);
+            console.log(billingAddressData);
         }
         fetchOrderDetails(); // its just a function call and not dependency.
     }, [orderId]); // orderID is dependency as whenever it changes, page will re-render.
@@ -69,18 +90,46 @@ function OrderDetails() {
             </button>
             <h1 className="order-details-title">Order Details</h1>
             <p className="order-summary">Order ID: {order._id}</p>
+            <div className="shipping-address">
+                <p>
+                    Shipping address: {order.shippingAddressId}
+                </p>
+                <p>
+                    Shipping Method: {order.shippingMethod}
+                </p>
+                <p>
+                    Payment Method: {order.paymentMethod.toUpperCase()}
+                </p>
+                <p>
+                    {shippingAddress?.firstName}{shippingAddress?.lastName}<br/>
+                    {shippingAddress?.addressLine1} {shippingAddress?.addressLine2}<br/>
+                    {shippingAddress?.city} {shippingAddress?.state}<br/>
+                    {shippingAddress?.country} {shippingAddress?.postalCode}<br/>
+                    {shippingAddress?.phone}<br/><br/>
+                </p>
+            </div>
+            <div className="billing-address">
+                <p>
+                    Billing address: {order.billingAddressId}<br/>
+                </p>
+                <p>
+                    {billingAddress?.firstName} {billingAddress?.lastName}<br/>
+                    {billingAddress?.addressLine1} {billingAddress?.addressLine2}<br/>
+                    {billingAddress?.city} {billingAddress?.state}<br/>
+                    {billingAddress?.country} {billingAddress?.postalCode}<br/>
+                    {billingAddress?.phone}<br/>
+                </p>
+            </div>
             <p>
                 Date:{" "}
                 {new Date(order.createdAt).toLocaleDateString()}
             </p>
 
-            <p>Total: ₹{order.totalPrice}</p>
-
             <p>Payment: {order.paymentStatus}</p>
 
-            <p>Status: {order.orderStatus}</p>
+            <p>Status: {order.orderStatus}</p><br/><br/>
 
-            <h2>Items</h2>
+            <h2>Product details</h2>
 
             <table className="order-items-table">
                 <thead>
@@ -123,6 +172,10 @@ function OrderDetails() {
                     ))}
                 </tbody>
             </table>
+            <div>Subtotal: ₹{order.subtotal}</div>
+            <div>Tax: ₹{order.tax}</div>
+            <div>Shipping Price: ₹{order.shippingPrice}</div>
+            <div>Total: ₹{order.totalPrice}</div>
         </div>
     )
 }

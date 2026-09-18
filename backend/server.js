@@ -8,6 +8,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const addressRoutes = require("./routes/addressRoutes");
 
 app.use(express.json());
 app.use(cors());
@@ -17,6 +18,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.delete("/api/cart", cartRoutes);
+app.use("/api/addresses", addressRoutes);
 
 app.get("/", (req, resp) => {
     resp.json({

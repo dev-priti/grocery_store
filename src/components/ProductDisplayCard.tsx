@@ -9,11 +9,11 @@ export type productDisplayCardProps = {
 
 function ProductDisplayCard({ product, addToCart }: productDisplayCardProps) {
   return (
+    <Card style={{ width: "18rem" }} className=" p-2 m-2 ">
     <Link
       style={{ textDecoration: "none" }}
       to={`/product/${product.category}/${product.id}/${product.name}`}
     >
-      <Card style={{ width: "18rem" }} className=" p-2 m-2 ">
         <Card.Img
           style={{ height: "18rem" }}
           variant="top"
@@ -33,6 +33,7 @@ function ProductDisplayCard({ product, addToCart }: productDisplayCardProps) {
 
           {/* <form name="cart">                             */}
         </Card.Body>
+          </Link>
         <Card.Footer>
           <Button
             className=" w-100 align-self-end"
@@ -46,7 +47,6 @@ function ProductDisplayCard({ product, addToCart }: productDisplayCardProps) {
         </Card.Footer>
         {/* </form> */}
       </Card>
-    </Link>
   );
 }
 
