@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Address } from "../../types/Address";
 import AddressForm from "./AddressForm";
+import { getAuthToken } from "../../util/auth";
 
 type AddressSelectorProps = {
     title: string;
@@ -21,7 +22,7 @@ function AddressSelector({
 
     useEffect(() => {
         const fetchAddresses = async () => {
-            const token = localStorage.getItem("token");
+            const token = getAuthToken();
 
             if (!token) {
                 return;
@@ -86,7 +87,7 @@ function AddressSelector({
     };
 
     const handleDeleteAddress = async (addressId: string) => {
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             return;
@@ -138,7 +139,7 @@ function AddressSelector({
     };
 
     const handleSetDefaultAddress = async (addressId: string) => {
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             return;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AuthUser } from "../../types/User";
 import { Link } from "react-router-dom";
-//import { authenticateUser } from "../../util/auth";
+import { setAuthToken } from "../../util/auth";
 
 type LoginProps = {
     setUser: Dispatch<SetStateAction<AuthUser | null>>;
@@ -88,7 +88,7 @@ function Login({ setUser }: LoginProps) {
             };
 
             setUser(loggedInUser);
-            localStorage.setItem("token", data.token);
+            setAuthToken(data.token);
             navigate("/profile");
         } catch (error) {
             const message = error instanceof Error ? error.message : "Unable to login right now. Please try again.";

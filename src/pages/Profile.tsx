@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect , useReducer} from "react";
 import DatePicker from "react-datepicker";
 import "../../node_modules/react-datepicker/dist/react-datepicker.css";
+import { getAuthToken } from "../util/auth";
 import {
     profileReducer,
     initialState,
@@ -35,7 +36,7 @@ function Profile({ user }: ProfileProps) {
      */
     useEffect(() => {
         const fetchUserData = async () => {
-            const token = localStorage.getItem("token");
+            const token = getAuthToken();
 
             if (!token) {
                 dispatch({
@@ -242,7 +243,7 @@ function Profile({ user }: ProfileProps) {
             return;
         }
 
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             dispatch({

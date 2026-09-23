@@ -5,6 +5,7 @@ import {
     type AddressForm as AddressFormState,
 } from "../../reducers/addressReducer";
 import type { Address } from "../../types/Address";
+import { getAuthToken } from "../../util/auth";
 
 type AddressFormProps = {
     address?: Address;
@@ -41,7 +42,7 @@ function AddressForm({
         ) => {
             event.preventDefault();
 
-            const token = localStorage.getItem("token");
+            const token = getAuthToken();
 
             if (!token) {
                 alert("Please login first");

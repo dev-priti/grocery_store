@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { clearAuthToken, getAuthToken } from "./util/auth";
 //import categories from "../src/data/categories.json";
 import type { CategoryType } from "./types/Category";
 import products from "../src/data/products.json";
@@ -34,7 +35,7 @@ function App() {
   const [user, setUser] = useState<AuthUser | null>(null);
 
   const addToCart = async (product: ProductType) => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
 
     if (!token) {
         alert("Please login to add items to cart");
@@ -208,7 +209,7 @@ function App() {
     productId: number,
     change: number
 ) => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
 
     if (!token) {
         return;
@@ -266,7 +267,7 @@ function App() {
 
   // Remove item from cart and DB
   const removeItem = async (productId: number) => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
 
     if (!token) {
         return;
@@ -317,7 +318,7 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
+      const token = getAuthToken();
 
       if (!token) {
         setAuthLoading(false);
@@ -335,7 +336,7 @@ function App() {
         );
 
         if (!response.ok) {
-          localStorage.removeItem("token");
+          clearAuthToken();
           setAuthLoading(false);
           return;
         }
@@ -358,7 +359,7 @@ function App() {
     }
 
     const fetchCart = async () => {
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             return;
