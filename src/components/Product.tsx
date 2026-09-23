@@ -1,54 +1,87 @@
 //import products from "../data/products.json";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import type { ProductType } from "../types/ProductType";
 import { useEffect, useState } from "react";
+import { DEFAULT_PRODUCT_IMAGE, getProductImage } from "../util/productImage";
 
 export type productProps = {
-    //searchText?: string;
     addToCart?: (product: ProductType) => void;
-}
+};
 
-//function ProductListing({id, name} : categoryProp ) {
-function Product ({ addToCart }: productProps) {
-    const { productId } = useParams<{productId: string}>();
+function Product({ addToCart }: productProps) {
+    const { productId } = useParams<{ productId: string }>();
     const [products, setProducts] = useState<ProductType[]>([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const response = await fetch(
-                "http://localhost:3000/api/products"
-            );
-
+            const response = await fetch("http://localhost:3000/api/products");
             const data = await response.json();
-
             setProducts(data);
         };
 
         fetchProducts();
     }, []);
 
-    const filteredProducts = productId ? products.filter(product => product.id === Number(productId)) : products;
+    const filteredProducts = productId
+        ? products.filter((product) => product.id === Number(productId))
+        : products;
 
-    return(
-        <div className="site__product-container">
+    if (filteredProducts.length === 0) {
+        return (
+            <div className="product-detail-page">
+                <div className="empty-state-card">
+                    <h2>No product found.</h2>
+                    <p>Please return to the product listing and choose another item.</p>
+                    <Link to="/all" className="btn btn-success">Browse products</Link>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="product-detail-page">
             {filteredProducts.map((product) => (
-                <div className="product-container" key={product.id}>
-                    <div className="image-container">
-                        <img src={product.image} className="product-img" alt={product.name} width="100" height="100" />
+                <div className="product-detail-card" key={product.id}>
+                    <div className="product-detail-image-wrap">
+                        <img
+                            src={getProductImage(product.image)}
+                            className="product-detail-image"
+                            alt={product.name}
+                            onError={(event) => {
+                                event.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                            }}
+                        />
                     </div>
-                    <div className="product-details">
-                        <div className="product-title">{product.name}</div>
-                        <div className="product-subtitle">{product.description}</div>
-                        <div className="product-unit">
-                            <span className="price">{product.price}</span>
-                            <span className="product-unit">{product.unit}</span>
+
+                    <div className="product-detail-info">
+                        <span className="product-badge">Fresh pick</span>
+                        <h1>{product.name}</h1>
+                        <p className="product-detail-description">{product.description}</p>
+
+                        <div className="product-detail-price-row">
+                            <span className="product-detail-price">₹{product.price}</span>
+                            <span className="product-detail-unit">{product.unit}</span>
+                            <span className="product-detail-rating">★ {product.rating}</span>
                         </div>
-                        <div className="product-rating">{product.rating}</div>
-                    </div>
-                    <div className="product-add-to-cart">
-                        {/* <form name="cart">                             */}
-                            <button className="add-to-cart-button" value="Add to Cart" product-id={product.id} onClick={() => addToCart?.(product)}>Add to Cart</button>
-                        {/* </form> */}
+
+                        <div className="product-detail-meta">
+                            <span>Category: {product.category}</span>
+                            <span>Product ID: #{product.id}</span>
+                        </div>
+
+                        <div className="product-detail-actions">
+                            <button
+                                className="btn btn-success product-detail-button"
+                                value="Add to Cart"
+                                product-id={product.id}
+                                onClick={() => addToCart?.(product)}
+                            >
+                                Add to Cart
+                            </button>
+                            <Link to="/all" className="btn btn-outline-success product-detail-secondary">
+                                Continue Shopping
+                            </Link>
+                        </div>
                     </div>
                 </div>
             ))}

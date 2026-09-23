@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { ProductType } from "../../types/ProductType";
+import { DEFAULT_PRODUCT_IMAGE, getProductImage } from "../../util/productImage";
 
 type cartPopupProps = {
     product: ProductType;
@@ -7,39 +8,52 @@ type cartPopupProps = {
     onClose: () => void;
 };
 
-function CartPopup ({product, cartCount, onClose} : cartPopupProps) {
+function CartPopup ({ product, cartCount, onClose }: cartPopupProps) {
     const navigate = useNavigate();
+
     const handleViewCart = () => {
         onClose();
         navigate("/cart");
     };
 
     return (
-        <div className="cart-overlay modal">
-            <div className="model-dialog">
-                <div className="cart-popup modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Item added to the bag.</h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={onClose}>
+        <div className="cart-overlay" role="dialog" aria-modal="true" aria-label="Added to cart">
+            <div className="cart-modal-dialog">
+                <div className="cart-popup">
+                    <div className="cart-popup-header">
+                        <h5>Item added to the bag.</h5>
+                        <button
+                            type="button"
+                            className="cart-close-button"
+                            aria-label="Close"
+                            onClick={onClose}
+                        >
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div className="modal-body">
+
+                    <div className="cart-popup-body">
                         <img
-                            src={product.image}
+                            src={getProductImage(product.image)}
                             alt={product.name}
-                            width="80"
-                            />
-                        <h3>{product.name}</h3>
-                        <p>₹{product.price}</p>
-                        <p>Added to your bag!</p>
-                        <p>Items in bag: {cartCount}</p>
-                        {/* <Link to="/cart">
-                            View Cart
-                            </Link> OR  */}
+                            className="cart-popup-image"
+                            onError={(event) => {
+                                event.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                            }}
+                        />
+
+                        <div className="cart-popup-details">
+                            <h3>{product.name}</h3>
+                            <p className="cart-popup-price">₹{product.price}</p>
+                            <p className="cart-popup-text">Added to your bag!</p>
+                            <p className="cart-popup-meta">Items in bag: {cartCount}</p>
+                        </div>
                     </div>
-                    <div className="modal-footer">
-                        <button className="btn btn-primary" onClick={handleViewCart}>Viewcart</button>
+
+                    <div className="cart-popup-footer">
+                        <button className="btn btn-primary cart-popup-button" onClick={handleViewCart}>
+                            View cart
+                        </button>
                     </div>
                 </div>
             </div>

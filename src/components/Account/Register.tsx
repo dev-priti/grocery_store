@@ -101,78 +101,92 @@ function Register() {
     }
 
     return (
-        <div className="register-container bd-example">
-            <h2>Create Account</h2>
+        <div className="auth-page register-page">
+            <div className="auth-card register-card">
+                <div className="auth-brand">FreshCart</div>
+                <h1 className="auth-title">Create account</h1>
+                <p className="auth-subtitle">Start your healthy food journey today</p>
 
-            <form name="register" onSubmit={handleSubmit}>
-                <div className="form-row">
-                    <div className="form-group col-md-6">
-                        <input
-                            type="text"
-                            placeholder="Name"
-                            className="form-control"
-                            id="inputFirstName4"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                <form name="register" className="auth-form" onSubmit={handleSubmit}>
+                    <div className="row g-3">
+                        <div className="col-md-6">
+                            <label htmlFor="inputFirstName4" className="form-label">First name</label>
+                            <input
+                                type="text"
+                                placeholder="First name"
+                                className="form-control"
+                                id="inputFirstName4"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
                             />
+                        </div>
+
+                        <div className="col-md-6">
+                            <label htmlFor="inputLastNam4" className="form-label">Last name</label>
+                            <input
+                                type="text"
+                                placeholder="Last name"
+                                className="form-control"
+                                id="inputLastNam4"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-12">
+                            <label htmlFor="inputEmail4" className="form-label">Email address</label>
+                            <input
+                                type="email"
+                                placeholder="you@example.com"
+                                className="form-control"
+                                id="inputEmail4"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-md-6">
+                            <label htmlFor="inputPassword4" className="form-label">Password</label>
+                            <input
+                                type="password"
+                                placeholder="Create password"
+                                className="form-control"
+                                id="inputPassword4"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-md-6">
+                            <label htmlFor="inputConfirmPassword4" className="form-label">Confirm password</label>
+                            <div className="input-group">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    placeholder="Confirm password"
+                                    className="form-control"
+                                    id="inputConfirmPassword4"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                >
+                                    {showConfirmPassword ? "Hide" : "Show"}
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="form-group col-md-6">
-                        <input
-                            type="text"
-                            placeholder="Last Name"
-                            className="form-control"
-                            id="inputLastNam4"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            />
-                    </div>
+                    <button type="submit" className="btn btn-success w-100 auth-submit">Register</button>
+                </form>
 
-                    <div className="form-group col-md-6">
-                        <input
-                            type="email"
-                            placeholder="Email address"
-                            className="form-control"
-                            id="inputEmail4"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            />
-                    </div>
+                <div className="auth-footer">
+                    <span>Already have an account?</span>
+                    <Link to="/login" className="auth-link">Login</Link>
                 </div>
-                <div className="form-row">
-                    <div className="form-group col-md-6">
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            className="form-control"
-                            id="inputPassword4"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            />
-                    </div>
-                        
-                    <div className="form-group col-md-6">
-                        <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm password"
-                        className="form-control"
-                        id="inputConfirmPassword4"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        />       
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            >
-                            {showConfirmPassword ? "Hide" : "Show"}
-                        </button>   
-                    </div>
-                </div>
-                <button type="submit" className="btn btn-primary">Register</button>
-            </form>
-            <Link to="/login">
-                Login
-            </Link>
+            </div>
         </div>
     );
 }

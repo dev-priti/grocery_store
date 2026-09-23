@@ -90,125 +90,154 @@ function AddressForm({
         };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="First Name"
-                value={form.firstName}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "firstName",
-                        value: e.target.value,
-                    })
-                }
-            />
+        <form className="address-form" onSubmit={handleSubmit}>
+            <div className="address-form-grid">
+                <div className="address-field">
+                    <label>First Name</label>
+                    <input
+                        type="text"
+                        placeholder="First Name"
+                        value={form.firstName}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "firstName",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <input
-                type="text"
-                placeholder="Last Name"
-                value={form.lastName}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "lastName",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field">
+                    <label>Last Name</label>
+                    <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={form.lastName}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "lastName",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <input
-                type="tel"
-                placeholder="Phone"
-                value={form.phone}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "phone",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field full-width">
+                    <label>Phone</label>
+                    <input
+                        type="tel"
+                        placeholder="Phone"
+                        value={form.phone}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "phone",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <input
-                type="text"
-                placeholder="Address 1"
-                value={form.addressLine1}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "addressLine1",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field full-width">
+                    <label>Address Line 1</label>
+                    <input
+                        type="text"
+                        placeholder="Address 1"
+                        value={form.addressLine1}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "addressLine1",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <input
-                type="text"
-                placeholder="Address 2"
-                value={form.addressLine2}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "addressLine2",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field full-width">
+                    <label>Address Line 2</label>
+                    <input
+                        type="text"
+                        placeholder="Address 2"
+                        value={form.addressLine2}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "addressLine2",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <input
-                type="text"
-                placeholder="City"
-                value={form.city}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "city",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field">
+                    <label>City</label>
+                    <input
+                        type="text"
+                        placeholder="City"
+                        value={form.city}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "city",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
 
-            <select
-                value={form.state}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "state",
-                        value: e.target.value,
-                    })
-                }
-            >
-                <option>Delhi</option>
-                <option>Gujarat</option>
-                <option>Uttar Pradesh</option>
-            </select>
+                <div className="address-field">
+                    <label>State</label>
+                    <select
+                        value={form.state}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "state",
+                                value: e.target.value,
+                            })
+                        }
+                    >
+                        <option>Delhi</option>
+                        <option>Gujarat</option>
+                        <option>Uttar Pradesh</option>
+                    </select>
+                </div>
 
-            <input
-                type="text"
-                placeholder="Postal Code"
-                value={form.postalCode}
-                onChange={(e) =>
-                    dispatch({
-                        type: "SET_FIELD",
-                        field: "postalCode",
-                        value: e.target.value,
-                    })
-                }
-            />
+                <div className="address-field">
+                    <label>Postal Code</label>
+                    <input
+                        type="text"
+                        placeholder="Postal Code"
+                        value={form.postalCode}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "SET_FIELD",
+                                field: "postalCode",
+                                value: e.target.value,
+                            })
+                        }
+                    />
+                </div>
+            </div>
 
-            <button type="submit">
-                {address ? "Update Address" : "Save Address"}
-            </button>
-
-            {address && onCancel && (
-                <button
-                    type="button"
-                    onClick={onCancel}
-                >
-                    Cancel
+            <div className="address-form-actions">
+                <button type="submit" className="btn btn-success">
+                    {address ? "Update Address" : "Save Address"}
                 </button>
-            )}
+
+                {address && onCancel && (
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </button>
+                )}
+            </div>
         </form>
     );
 }

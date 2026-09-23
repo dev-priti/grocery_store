@@ -47,36 +47,60 @@ function Orders() {
     }, []);
 
     return (
-        <div>
-            <h1>My Orders</h1>
+        <div className="orders-page">
+            <div className="orders-header">
+                <div>
+                    <p className="section-kicker">Your purchases</p>
+                    <h1>My Orders</h1>
+                </div>
+            </div>
 
             {orders.length === 0 ? (
-                <p>No orders found.</p>
+                <div className="empty-orders-state">
+                    <h2>No orders found.</h2>
+                    <p>Your recent grocery orders will appear here.</p>
+                </div>
             ) : (
-                orders.map(order => (
-                    <div key={order._id}
-                    onClick={() => navigate(`/orders/${order._id}`)}
-                    style={{ cursor: "pointer" }}
-                    >
-                        <h3>Order #{order._id}</h3>
-
-                        <p>
-                            Date:{" "}
-                            {new Date(order.createdAt).toLocaleDateString()}
-                        </p>
-
-                        {
-                            order.items.map(item => (
-                                <div key={item.productId}>
-                                    <p>{item.itemName}</p>
-                                    <img src={item.image} />
+                <div className="orders-list">
+                    {orders.map(order => (
+                        <div
+                            key={order._id}
+                            className="order-card"
+                            onClick={() => navigate(`/orders/${order._id}`)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    navigate(`/orders/${order._id}`);
+                                }
+                            }}
+                        >
+                            <div className="order-card-header">
+                                <div>
+                                    <p className="order-label">Order #{order._id.slice(-6).toUpperCase()}</p>
+                                    <h3>{new Date(order.createdAt).toLocaleDateString()}</h3>
                                 </div>
-                            )
-                        )}
+                                <span className="status-pill">{order.orderStatus}</span>
+                            </div>
 
-                        <p>Status: {order.orderStatus}</p>
-                    </div>
-                ))
+                            <div className="order-items-preview">
+                                {order.items.slice(0, 3).map(item => (
+                                    <div key={item.productId} className="mini-item">
+                                        {item.image && (
+                                            <img src={item.image} alt={item.itemName} />
+                                        )}
+                                        <span>{item.itemName}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="order-card-footer">
+                                <span>{order.items.length} items</span>
+                                <strong>View details</strong>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );
