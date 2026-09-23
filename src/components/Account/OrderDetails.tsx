@@ -81,104 +81,127 @@ function OrderDetails() {
     }
 
     return (
-        <div className="order-details">
+        <div className="order-details-page">
             <button
                 className="back-orders-button"
                 onClick={() => navigate("/orders")}
             >
                 ← Back to My Orders
             </button>
-            <h1 className="order-details-title">Order Details</h1>
-            <p className="order-summary">Order ID: {order._id}</p>
-            {
-                order.shippingAddress ? (
-                    <div className="shipping-address">
-                        <p>
-                            Shipping Method: {order.shippingMethod}<br/>
-                        </p>
-                        <p>
-                            Payment Method: {order.paymentMethod.toUpperCase()}<br/>
-                        </p>
-                        <p>
-                            {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br/>
-                            {order.shippingAddress?.addressLine1} {order.shippingAddress?.addressLine2}<br/>
-                            {order.shippingAddress?.city} {order.shippingAddress?.state}<br/>
-                            {order.shippingAddress?.country} {order.shippingAddress?.postalCode}<br/>
-                            {order.shippingAddress?.phone}<br/><br/>
-                        </p>
+
+            <div className="order-details-header">
+                <div>
+                    <p className="section-kicker">Order summary</p>
+                    <h1 className="order-details-title">Order Details</h1>
+                </div>
+                <span className="status-pill status-pill-large">{order.orderStatus}</span>
+            </div>
+
+            <div className="order-info-grid">
+                <div className="details-panel">
+                    <h2>Order information</h2>
+                    <div className="detail-row">
+                        <span>Order ID</span>
+                        <strong>{order._id}</strong>
                     </div>
-                ) : null 
-            }
-
-            { 
-                order.billingAddress ? (
-                    <div className="billing-address">
-                        <p>
-                                {order.billingAddress?.firstName} {order.billingAddress?.lastName}<br/>
-                                {order.billingAddress?.addressLine1} {order.billingAddress?.addressLine2}<br/>
-                                {order.billingAddress?.city} {order.billingAddress?.state}<br/>
-                                {order.billingAddress?.country} {order.billingAddress?.postalCode}<br/>
-                                {order.billingAddress?.phone}<br/>
-                        </p>
+                    <div className="detail-row">
+                        <span>Placed on</span>
+                        <strong>{new Date(order.createdAt).toLocaleDateString()}</strong>
                     </div>
-                    ) : null
-            }
-            <p>
-                Date:{" "}
-                {new Date(order.createdAt).toLocaleDateString()}
-            </p>
+                    <div className="detail-row">
+                        <span>Payment status</span>
+                        <strong>{order.paymentStatus}</strong>
+                    </div>
+                    <div className="detail-row">
+                        <span>Shipping method</span>
+                        <strong>{order.shippingMethod}</strong>
+                    </div>
+                    <div className="detail-row">
+                        <span>Payment method</span>
+                        <strong>{order.paymentMethod}</strong>
+                    </div>
+                </div>
 
-            <p>Payment: {order.paymentStatus}</p>
+                <div className="details-panel">
+                    <h2>Address</h2>
+                    {order.shippingAddress ? (
+                        <div className="address-block">
+                            <h3>Shipping</h3>
+                            <p>
+                                {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br />
+                                {order.shippingAddress?.addressLine1} {order.shippingAddress?.addressLine2}<br />
+                                {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}<br />
+                                {order.shippingAddress?.country}<br />
+                                {order.shippingAddress?.phone}
+                            </p>
+                        </div>
+                    ) : null}
 
-            <p>Status: {order.orderStatus}</p><br/><br/>
+                    {order.billingAddress ? (
+                        <div className="address-block">
+                            <h3>Billing</h3>
+                            <p>
+                                {order.billingAddress?.firstName} {order.billingAddress?.lastName}<br />
+                                {order.billingAddress?.addressLine1} {order.billingAddress?.addressLine2}<br />
+                                {order.billingAddress?.city}, {order.billingAddress?.state} {order.billingAddress?.postalCode}<br />
+                                {order.billingAddress?.country}<br />
+                                {order.billingAddress?.phone}
+                            </p>
+                        </div>
+                    ) : null}
+                </div>
+            </div>
 
-            <h2>Product details</h2>
+            <div className="order-items-card">
+                <h2>Product details</h2>
 
-            <table className="order-items-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {order.items.map(item => (
-                        <tr key={item.productId}>
-                            <td>
-                                <div className="order-product">
-                                    <img
-                                        src={
-                                            item.image ||
-                                            "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
-                                        }
-                                        alt={item.itemName}
-                                        className="order-product-image"
-                                        onError={(event) => {
-                                            event.currentTarget.src =
-                                                "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp";
-                                        }}
-                                    />
-
-                                    <span>{item.itemName}</span>
-                                </div>
-                            </td>
-
-                            <td>{item.quantity}</td>
-
-                            <td>₹{item.priceAtPurchase}</td>
-
-                            <td>₹{item.itemSubtotal}</td>
+                <table className="order-items-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div>Subtotal: ₹{order.subtotal}</div>
-            <div>Tax: ₹{order.tax}</div>
-            <div>Shipping Price: ₹{order.shippingPrice}</div>
-            <div>Total: ₹{order.totalPrice}</div>
+                    </thead>
+
+                    <tbody>
+                        {order.items.map(item => (
+                            <tr key={item.productId}>
+                                <td>
+                                    <div className="order-product">
+                                        <img
+                                            src={
+                                                item.image ||
+                                                "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
+                                            }
+                                            alt={item.itemName}
+                                            className="order-product-image"
+                                            onError={(event) => {
+                                                event.currentTarget.src =
+                                                    "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp";
+                                            }}
+                                        />
+
+                                        <span>{item.itemName}</span>
+                                    </div>
+                                </td>
+
+                                <td>{item.quantity}</td>
+                                <td>₹{item.priceAtPurchase}</td>
+                                <td>₹{item.itemSubtotal}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="order-total-card">
+                <div className="detail-row"><span>Subtotal</span><strong>₹{order.subtotal}</strong></div>
+                <div className="detail-row"><span>Tax</span><strong>₹{order.tax}</strong></div>
+                <div className="detail-row"><span>Shipping</span><strong>₹{order.shippingPrice}</strong></div>
+                <div className="detail-row total-row"><span>Total</span><strong>₹{order.totalPrice}</strong></div>
+            </div>
         </div>
     )
 }

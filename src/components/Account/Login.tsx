@@ -99,38 +99,44 @@ function Login({ setUser }: LoginProps) {
     };
 
     return(
+        <div className="auth-page login-page">
+            <div className="auth-card">
+                <div className="auth-brand">FreshCart</div>
+                <h1 className="auth-title">Welcome back</h1>
+                <p className="auth-subtitle">Sign in to continue your grocery shopping</p>
 
-        <div className="login-container form-group">
-            <div>
-                <p>Login !!</p>
-                <div className="login-form">
-                    <form name="login" onSubmit={handleSubmit} >
-                        <div className="email-address form-group">
-                            <input type="email" className="email-field form-control mx-sm-3 mb-2" id="exampleInputEmail1" name="email" value={email} placeholder="Email address" onChange={(e) => setEmail(e.target.value)}></input>
-                        </div>
-                        <div className="password-field form-group">
-                            <input type={showPassword ? "text" : "password"} className="password-field form-control mx-sm-3 mb-2" id="exampleInputPassword" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} ></input>
+                <form name="login" className="auth-form" onSubmit={handleSubmit} >
+                    <div className="form-group mb-3">
+                        <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+                        <input type="email" className="form-control" id="exampleInputEmail1" name="email" value={email} placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)}></input>
+                    </div>
+
+                    <div className="form-group mb-3">
+                        <label htmlFor="exampleInputPassword" className="form-label">Password</label>
+                        <div className="input-group">
+                            <input type={showPassword ? "text" : "password"} className="form-control" id="exampleInputPassword" name="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} ></input>
                             <button
-                                type="button" className="btn btn-primary mb-2"
+                                type="button" className="btn btn-outline-secondary"
                                 onClick={() => setShowPassword(!showPassword)}
                                 >
                                 {showPassword ? "Hide" : "Show"}
                             </button>
                         </div>
-                        <div className="login-submit">
-                            <button
-                                type="submit"
-                                className="submit-field btn btn-primary"
-                                name="Submit"
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? "Logging in..." : "Login"}
-                            </button>
-                        </div>
-                    </form>
-                    <Link to="/register">
-                    Register
-                    </Link>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="btn btn-success w-100 auth-submit"
+                        name="Submit"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? "Logging in..." : "Login"}
+                    </button>
+                </form>
+
+                <div className="auth-footer">
+                    <span>New here?</span>
+                    <Link to="/register" className="auth-link">Create an account</Link>
                 </div>
             </div>
         </div>

@@ -346,279 +346,193 @@ function Profile({ user }: ProfileProps) {
     };
 
     return (
-        <div>
-            <div>Logged in successfully!!!</div>
-
-            <button
-                className="back-orders-button"
-                onClick={() => navigate("/orders")}
-            >
-                ← Order History
-            </button>
-
-            <h2>
-                Welcome, {user?.name || "User"}
-            </h2>
-
-            <div className="account-profile">
-                {/* Success message */}
-                {state.successMessage && (
-                    <p className="profile-success-message">
-                        {state.successMessage}
-                    </p>
-                )}
-
-                {/* Error message */}
-                {state.errorMessage && (
-                    <p className="profile-error-message">
-                        {state.errorMessage}
-                    </p>
-                )}
-
-                <form
-                    name="profile"
-                    onSubmit={handleProfileUpdate}
+        <div className="profile-page">
+            <div className="profile-page-header">
+                <div>
+                    <p className="section-kicker">Account settings</p>
+                    <h1>Profile</h1>
+                </div>
+                <button
+                    className="btn btn-outline-success"
+                    onClick={() => navigate("/orders")}
                 >
-                    {/* EMAIL */}
-                    <div className="email-field">
-                        <label htmlFor="email">
-                            Email
-                        </label>
-
-                        <input
-                            id="email"
-                            type="email"
-                            value={user?.email || ""}
-                            disabled
-                        />
-                    </div>
-
-                    {/* FIRST NAME / LAST NAME */}
-                    <div className="name-field">
-                        <div>
-                            <label htmlFor="firstName">
-                                First Name
-                            </label>
-
-                            <input
-                                id="firstName"
-                                type="text"
-                                value={
-                                    state.formData.firstName
-                                }
-                                onChange={(e) =>
-                                    dispatch({
-                                        type: "SET_FORM_FIELD",
-                                        field: "firstName",
-                                        value: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="lastName">
-                                Last Name
-                            </label>
-
-                            <input
-                                id="lastName"
-                                type="text"
-                                value={
-                                    state.formData.lastName
-                                }
-                                onChange={(e) =>
-                                    dispatch({
-                                        type: "SET_FORM_FIELD",
-                                        field: "lastName",
-                                        value: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                    </div>
-
-                    {/* PASSWORD */}
-                    <div className="password-field">
-                        <div>
-                            <label htmlFor="password">
-                                Password
-                            </label>
-
-                            <input
-                                id="password"
-                                type="password"
-                                value={
-                                    state.formData.password
-                                }
-                                onChange={(e) =>
-                                    dispatch({
-                                        type: "SET_FORM_FIELD",
-                                        field: "password",
-                                        value: e.target.value,
-                                    })
-                                }
-                                autoComplete="new-password"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="confirmPassword">
-                                Confirm Password
-                            </label>
-
-                            <input
-                                id="confirmPassword"
-                                type="password"
-                                value={
-                                    state.formData.confirmPassword
-                                }
-                                onChange={(e) =>
-                                    dispatch({
-                                        type: "SET_FORM_FIELD",
-                                        field: "confirmPassword",
-                                        value: e.target.value,
-                                    })
-                                }
-                                autoComplete="new-password"
-                            />
-                        </div>
-                    </div>
-
-                    {/* PHONE */}
-                    <div className="phone-field">
-                        <label htmlFor="phone">
-                            Mobile Number
-                        </label>
-
-                        <input
-                            id="phone"
-                            type="tel"
-                            value={state.formData.phone}
-                            maxLength={10}
-                            pattern="[0-9]{10}"
-                            onChange={(e) => {
-                                /*
-                                 * Only allow numbers.
-                                 */
-                                const value =
-                                    e.target.value.replace(
-                                        /\D/g,
-                                        ""
-                                    );
-
-                                dispatch({
-                                    type: "SET_FORM_FIELD",
-                                    field: "phone",
-                                    value: value,
-                                })
-                            }}
-                        />
-                    </div>
-
-                    {/* DATE OF BIRTH */}
-                    <div
-                        style={{
-                            maxWidth: "300px",
-                            margin: "20px auto",
-                            fontFamily:
-                                "Arial, sans-serif",
-                        }}
-                    >
-                        <label
-                            htmlFor="dob"
-                            style={{
-                                display: "block",
-                                marginBottom: "8px",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Date of Birth:
-                        </label>
-
-                        <DatePicker
-                            id="dob"
-                            selected={state.formData.dob}
-                            onChange={(
-                                date: Date | null
-                            ) =>
-                                dispatch({
-                                    type: "SET_FORM_FIELD",
-                                    field: "dob",
-                                    value: date,
-                                })
-                            }
-                            dateFormat="yyyy-MM-dd"
-                            placeholderText="Select your birth date"
-                            showMonthDropdown
-                            showYearDropdown
-                            dropdownMode="select"
-                            minDate={
-                                minSelectableDate
-                            }
-                            maxDate={
-                                maxSelectableDate
-                            }
-                            className="dob-input-field"
-                        />
-
-                        {state.formData.dob && (
-                            <p
-                                style={{
-                                    marginTop: "10px",
-                                    color: "#555",
-                                }}
-                            >
-                                Selected DOB:{" "}
-                                <strong>
-                                    {state.formData.dob.toLocaleDateString()}
-                                </strong>
-                            </p>
-                        )}
-                    </div>
-
-                    {/* EMAIL OPT-IN */}
-                    <div className="email-optin">
-                        <input
-                            type="checkbox"
-                            id="emailOptin"
-                            checked={
-                                Boolean(state.formData.emailOptin)
-                            }
-                            onChange={(e) =>
-                                dispatch({
-                                    type: "SET_FORM_FIELD",
-                                    field: "emailOptin",
-                                    value: e.target.checked ? 1 : 0,
-                                })
-                            }
-                        />
-
-                        <label htmlFor="emailOptin">
-                            Please select the newsletter
-                            to get the latest updates
-                            and news.
-                        </label>
-                    </div>
-
-                    {/* SUBMIT */}
-                    <button
-                        type="submit"
-                        className="profile-update-button"
-                        disabled={state.updating}
-                    >
-                        {state.updating
-                            ? "Updating Profile..."
-                            : "Update Profile"}
-                    </button>
-                </form>
+                    ← Order History
+                </button>
             </div>
 
-            <div className="profile-container bd-example">
-                <p>
-                    Profile details will appear here
-                    once the account data is available.
-                </p>
+            <div className="profile-shell">
+                <div className="profile-card">
+                    <div className="profile-card-header">
+                        <div>
+                            <p className="profile-greeting">Welcome back</p>
+                            <h2>{user?.name || "User"}</h2>
+                        </div>
+                    </div>
+
+                    {state.successMessage && (
+                        <p className="profile-success-message">
+                            {state.successMessage}
+                        </p>
+                    )}
+
+                    {state.errorMessage && (
+                        <p className="profile-error-message">
+                            {state.errorMessage}
+                        </p>
+                    )}
+
+                    <form name="profile" className="profile-form" onSubmit={handleProfileUpdate}>
+                        <div className="profile-form-row">
+                            <div className="field-group">
+                                <label htmlFor="email">Email</label>
+                                <input id="email" type="email" value={user?.email || ""} disabled />
+                            </div>
+                        </div>
+
+                        <div className="profile-form-row two-column">
+                            <div className="field-group">
+                                <label htmlFor="firstName">First Name</label>
+                                <input
+                                    id="firstName"
+                                    type="text"
+                                    value={state.formData.firstName}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "SET_FORM_FIELD",
+                                            field: "firstName",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <div className="field-group">
+                                <label htmlFor="lastName">Last Name</label>
+                                <input
+                                    id="lastName"
+                                    type="text"
+                                    value={state.formData.lastName}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "SET_FORM_FIELD",
+                                            field: "lastName",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        <div className="profile-form-row two-column">
+                            <div className="field-group">
+                                <label htmlFor="password">Password</label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    value={state.formData.password}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "SET_FORM_FIELD",
+                                            field: "password",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                    autoComplete="new-password"
+                                />
+                            </div>
+
+                            <div className="field-group">
+                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <input
+                                    id="confirmPassword"
+                                    type="password"
+                                    value={state.formData.confirmPassword}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: "SET_FORM_FIELD",
+                                            field: "confirmPassword",
+                                            value: e.target.value,
+                                        })
+                                    }
+                                    autoComplete="new-password"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="profile-form-row">
+                            <div className="field-group">
+                                <label htmlFor="phone">Mobile Number</label>
+                                <input
+                                    id="phone"
+                                    type="tel"
+                                    value={state.formData.phone}
+                                    maxLength={10}
+                                    pattern="[0-9]{10}"
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/\D/g, "");
+                                        dispatch({
+                                            type: "SET_FORM_FIELD",
+                                            field: "phone",
+                                            value: value,
+                                        });
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="profile-form-row dob-block">
+                            <label htmlFor="dob">Date of Birth</label>
+                            <DatePicker
+                                id="dob"
+                                selected={state.formData.dob}
+                                onChange={(date: Date | null) =>
+                                    dispatch({
+                                        type: "SET_FORM_FIELD",
+                                        field: "dob",
+                                        value: date,
+                                    })
+                                }
+                                dateFormat="yyyy-MM-dd"
+                                placeholderText="Select your birth date"
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select"
+                                minDate={minSelectableDate}
+                                maxDate={maxSelectableDate}
+                                className="dob-input-field"
+                            />
+
+                            {state.formData.dob && (
+                                <p className="dob-preview">
+                                    Selected DOB: <strong>{state.formData.dob.toLocaleDateString()}</strong>
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="email-optin">
+                            <input
+                                type="checkbox"
+                                id="emailOptin"
+                                checked={Boolean(state.formData.emailOptin)}
+                                onChange={(e) =>
+                                    dispatch({
+                                        type: "SET_FORM_FIELD",
+                                        field: "emailOptin",
+                                        value: e.target.checked ? 1 : 0,
+                                    })
+                                }
+                            />
+
+                            <label htmlFor="emailOptin">
+                                Send me grocery offers and new product updates.
+                            </label>
+                        </div>
+
+                        <button type="submit" className="btn btn-success w-100 profile-update-button" disabled={state.updating}>
+                            {state.updating ? "Updating Profile..." : "Update Profile"}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );

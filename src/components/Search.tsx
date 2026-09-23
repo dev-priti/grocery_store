@@ -1,28 +1,31 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface SearchProps {
-    onSearch: (value: string) => void;
+  onSearch: (value: string) => void;
 }
 
 function Search({ onSearch }: SearchProps) {
+  const [searchText, setSearchText] = useState("");
 
-    const [searchText, setsearchText] = useState("");
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchText(value);
+    onSearch(value);
+  };
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setsearchText(value);
-        onSearch(value);
-    };
-
-    return (
-        <>
-            <span><input type="text" placeholder="Search products..." value={searchText} name="search" className="search-text" onChange={handleSearch} /></span>
-    
-            {/* {
-            searchText ? <p>You searched {searchText}!</p> : null
-            } */}
-        </>
-    )
+  return (
+    <div className="search-box">
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={searchText}
+        name="search"
+        className="search-text"
+        aria-label="Search products"
+        onChange={handleSearch}
+      />
+    </div>
+  );
 }
 
 export default Search;

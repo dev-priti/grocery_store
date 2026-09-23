@@ -80,6 +80,11 @@ function AddressSelector({
         setEditingAddress(null);
     };
 
+    const handleAddNewAddress = () => {
+        setEditingAddress(null);
+        setShowNewAddressForm(true);
+    };
+
     const handleDeleteAddress = async (addressId: string) => {
         const token = localStorage.getItem("token");
 
@@ -171,14 +176,14 @@ function AddressSelector({
     };
 
     return (
-        <section>
+        <section className="address-selector-shell">
             <h2>{title}</h2>
 
             {addresses.length > 0 && (
                 <div className="saved-addresses">
                     {addresses.map(address => (
-                        <div key={address._id}>
-                            <label>
+                        <div key={address._id} className="address-option-card">
+                            <label className="address-radio-row">
                                 <input
                                     type="radio"
                                     name={name}
@@ -189,34 +194,40 @@ function AddressSelector({
                                     }
                                 />
 
-                                <span>
-                                    {address.firstName}{" "}
-                                    {address.lastName} -{" "}
-                                    {address.addressLine1},{" "}
-                                    {address.city},{" "}
-                                    {address.state} -{" "}
-                                    {address.postalCode}
+                                <span className="address-summary">
+                                    <strong>
+                                        {address.firstName} {address.lastName}
+                                    </strong>
+                                    <span>
+                                        {address.addressLine1}, {address.city}, {address.state} - {address.postalCode}
+                                    </span>
                                 </span>
                             </label>
-                            <button
-                                type="button"
-                                onClick={() => handleDeleteAddress(address._id)}
-                            >
-                                Delete
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => handleEditAddress(address)}
-                            >
-                                Edit
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => handleSetDefaultAddress(address._id)}
-                                disabled={Boolean(address.isDefaultShipping)}
-                            >
-                                {address.isDefaultShipping ? "Default" : "Set as Default"}
-                            </button>
+
+                            <div className="address-action-row">
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-secondary"
+                                    onClick={() => handleEditAddress(address)}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => handleDeleteAddress(address._id)}
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-success"
+                                    onClick={() => handleSetDefaultAddress(address._id)}
+                                    disabled={Boolean(address.isDefaultShipping)}
+                                >
+                                    {address.isDefaultShipping ? "Default" : "Set as Default"}
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -224,18 +235,24 @@ function AddressSelector({
 
             <button
                 type="button"
-                onClick={() => setShowNewAddressForm(true)}
+                className="btn btn-primary add-address-button"
+                onClick={handleAddNewAddress}
             >
                 + Add New Address
             </button>
 
             {(showNewAddressForm || editingAddress) && (
-        <AddressForm
-            key={editingAddress?._id || "new"}
-            address={editingAddress || undefined}
-            onSaved={handleAddressSaved}
-            onCancel={() => setEditingAddress(null)}
-        />
+                <div className="address-form-panel">
+                    <AddressForm
+                        key={editingAddress?._id || "new"}
+                        address={editingAddress || undefined}
+                        onSaved={handleAddressSaved}
+                        onCancel={() => {
+                            setEditingAddress(null);
+                            setShowNewAddressForm(false);
+                        }}
+                    />
+                </div>
             )}
         </section>
     );

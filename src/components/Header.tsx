@@ -1,4 +1,3 @@
-import logo from "../assets/vite.svg";
 import bagIcon from "../assets/shopping-bag.svg";
 import searchIcon from "../assets/search-icon.svg";
 import userIcon from "../assets/icon--user.svg";
@@ -37,17 +36,17 @@ function Header(props: HeaderProps) {
       className="bg-body-tertiary justify-content-between"
       sticky="top"
     >
-      <Nav>
-        <Link to="/">
-          <img
-            // className="d-inline-block"
-            src={logo}
-            alt="Brand Logo"
-            width="50"
-            height="50"
-          />
+      <Nav className="brand-nav">
+        <Link to="/" className="brand-link">
+          <span className="brand-logo-badge">
+            <img
+              src={bagIcon}
+              alt="Krishna Grocery Store logo"
+              className="brand-logo-icon"
+            />
+          </span>
+          <span className="navbar-brand">Krishna Grocery Store</span>
         </Link>
-        <span className="navbar-brand">Krishna Grocery Store</span>
       </Nav>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse

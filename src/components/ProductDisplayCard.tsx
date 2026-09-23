@@ -1,6 +1,7 @@
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { ProductType } from "../types/ProductType";
+import { DEFAULT_PRODUCT_IMAGE, getProductImage } from "../util/productImage";
 
 export type productDisplayCardProps = {
   product: ProductType;
@@ -8,45 +9,55 @@ export type productDisplayCardProps = {
 };
 
 function ProductDisplayCard({ product, addToCart }: productDisplayCardProps) {
-  return (
-    <Card style={{ width: "18rem" }} className=" p-2 m-2 ">
-    <Link
-      style={{ textDecoration: "none" }}
-      to={`/product/${product.category}/${product.id}/${product.name}`}
-    >
-        <Card.Img
-          style={{ height: "18rem" }}
-          variant="top"
-          src={product.image}
-        />
+  const productImage = getProductImage(product.image);
 
-        <Card.Body>
-          <Card.Title>{product.name}</Card.Title>
-          <Card.Text style={{ height: "40px" }}>
+  return (
+    <Card className="product-showcase-card">
+      <Link
+        className="product-showcase-link"
+        to={`/product/${product.category}/${product.id}/${product.name}`}
+      >
+        <div className="product-showcase-image-wrap">
+          <Card.Img
+            className="product-showcase-image"
+            variant="top"
+            src={productImage}
+            onError={(event) => {
+              event.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+            }}
+          />
+        </div>
+
+        <Card.Body className="product-showcase-body">
+          <div className="product-showcase-meta">
+            <span className="product-showcase-category">{product.category}</span>
+            <span className="product-showcase-rating">★ {product.rating}</span>
+          </div>
+
+          <Card.Title className="product-showcase-title">{product.name}</Card.Title>
+          <Card.Text className="product-showcase-description">
             {product.description}
           </Card.Text>
-          <Card.Body className=" d-flex justify-content-between">
-            <div>₹{product.price}</div>
-            <div>{product.unit}</div>
-            {product.rating}
-          </Card.Body>
 
-          {/* <form name="cart">                             */}
+          <div className="product-showcase-price-row">
+            <div className="product-showcase-price">₹{product.price}</div>
+            <div className="product-showcase-unit">{product.unit}</div>
+          </div>
         </Card.Body>
-          </Link>
-        <Card.Footer>
-          <Button
-            className=" w-100 align-self-end"
-            variant="primary"
-            value="Add to Cart"
-            product-id={product.id}
-            onClick={() => addToCart?.(product)}
-          >
-            Add to Cart
-          </Button>
-        </Card.Footer>
-        {/* </form> */}
-      </Card>
+      </Link>
+
+      <div className="product-showcase-footer">
+        <Button
+          className="product-showcase-button"
+          variant="primary"
+          value="Add to Cart"
+          product-id={product.id}
+          onClick={() => addToCart?.(product)}
+        >
+          Add to Cart
+        </Button>
+      </div>
+    </Card>
   );
 }
 
