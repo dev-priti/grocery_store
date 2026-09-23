@@ -2,7 +2,6 @@ import type { ProfileUser } from "../types/User";
 import { useNavigate } from "react-router-dom";
 import { useEffect , useReducer} from "react";
 import DatePicker from "react-datepicker";
-import AccountNavbar from "../components/Account/AccountNavbar";
 import "../../node_modules/react-datepicker/dist/react-datepicker.css";
 import {
     profileReducer,
@@ -360,8 +359,6 @@ function Profile({ user }: ProfileProps) {
             <h2>
                 Welcome, {user?.name || "User"}
             </h2>
-
-            <AccountNavbar />
 
             <div className="account-profile">
                 {/* Success message */}
