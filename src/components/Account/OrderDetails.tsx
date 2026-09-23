@@ -1,13 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Order } from "../../types/Order";
-import type { Address } from "../../types/Address";
+//import type { Address } from "../../types/Address";
 
 function OrderDetails() {
     const { orderId } = useParams();
     const [order, setOrder] = useState<Order | null>(null);
-    const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
-    const [billingAddress, setBillingAddress] = useState<Address | null>(null);
+    // const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
+    // const [billingAddress, setBillingAddress] = useState<Address | null>(null);
     const navigate = useNavigate();
  
     useEffect(() => {
@@ -32,42 +32,42 @@ function OrderDetails() {
                 console.error(data.message);
             }
 
-            const shippingAddressResponse = await fetch(
-                `http://localhost:3000/api/addresses/${data?.shippingAddressId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                }               
-            );
+            // const shippingAddressResponse = await fetch(
+            //     `http://localhost:3000/api/addresses/${data?.shippingAddressId}`,
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${token}`,
+            //         }
+            //     }               
+            // );
 
-            const shippingAddressData = await shippingAddressResponse.json();
+            // const shippingAddressData = await shippingAddressResponse.json();
 
-            if(!shippingAddressResponse.ok) {
-                console.error(shippingAddressData.message);
-            }
+            // if(!shippingAddressResponse.ok) {
+            //     console.error(shippingAddressData.message);
+            // }
 
-            const billingAddressResponse = await fetch(
-                `http://localhost:3000/api/addresses/${data?.billingAddressId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                }               
-            );
+            // const billingAddressResponse = await fetch(
+            //     `http://localhost:3000/api/addresses/${data?.billingAddressId}`,
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${token}`,
+            //         }
+            //     }               
+            // );
 
-            const billingAddressData = await billingAddressResponse.json();
+            // const billingAddressData = await billingAddressResponse.json();
 
-            if(!billingAddressResponse.ok) {
-                console.error(billingAddressData.message);
-            }
+            // if(!billingAddressResponse.ok) {
+            //     console.error(billingAddressData.message);
+            // }
 
             setOrder(data);
-            setShippingAddress(shippingAddressData);
-            setBillingAddress(billingAddressData);
+            // setShippingAddress(shippingAddressData);
+            // setBillingAddress(billingAddressData);
 
-            console.log(shippingAddressData);
-            console.log(billingAddressData);
+            // console.log(shippingAddressData);
+            // console.log(billingAddressData);
         }
         fetchOrderDetails(); // its just a function call and not dependency.
     }, [orderId]); // orderID is dependency as whenever it changes, page will re-render.
@@ -90,36 +90,39 @@ function OrderDetails() {
             </button>
             <h1 className="order-details-title">Order Details</h1>
             <p className="order-summary">Order ID: {order._id}</p>
-            <div className="shipping-address">
-                <p>
-                    Shipping address: {order.shippingAddressId}
-                </p>
-                <p>
-                    Shipping Method: {order.shippingMethod}
-                </p>
-                <p>
-                    Payment Method: {order.paymentMethod.toUpperCase()}
-                </p>
-                <p>
-                    {shippingAddress?.firstName}{shippingAddress?.lastName}<br/>
-                    {shippingAddress?.addressLine1} {shippingAddress?.addressLine2}<br/>
-                    {shippingAddress?.city} {shippingAddress?.state}<br/>
-                    {shippingAddress?.country} {shippingAddress?.postalCode}<br/>
-                    {shippingAddress?.phone}<br/><br/>
-                </p>
-            </div>
-            <div className="billing-address">
-                <p>
-                    Billing address: {order.billingAddressId}<br/>
-                </p>
-                <p>
-                    {billingAddress?.firstName} {billingAddress?.lastName}<br/>
-                    {billingAddress?.addressLine1} {billingAddress?.addressLine2}<br/>
-                    {billingAddress?.city} {billingAddress?.state}<br/>
-                    {billingAddress?.country} {billingAddress?.postalCode}<br/>
-                    {billingAddress?.phone}<br/>
-                </p>
-            </div>
+            {
+                order.shippingAddress ? (
+                    <div className="shipping-address">
+                        <p>
+                            Shipping Method: {order.shippingMethod}<br/>
+                        </p>
+                        <p>
+                            Payment Method: {order.paymentMethod.toUpperCase()}<br/>
+                        </p>
+                        <p>
+                            {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br/>
+                            {order.shippingAddress?.addressLine1} {order.shippingAddress?.addressLine2}<br/>
+                            {order.shippingAddress?.city} {order.shippingAddress?.state}<br/>
+                            {order.shippingAddress?.country} {order.shippingAddress?.postalCode}<br/>
+                            {order.shippingAddress?.phone}<br/><br/>
+                        </p>
+                    </div>
+                ) : null 
+            }
+
+            { 
+                order.billingAddress ? (
+                    <div className="billing-address">
+                        <p>
+                                {order.billingAddress?.firstName} {order.billingAddress?.lastName}<br/>
+                                {order.billingAddress?.addressLine1} {order.billingAddress?.addressLine2}<br/>
+                                {order.billingAddress?.city} {order.billingAddress?.state}<br/>
+                                {order.billingAddress?.country} {order.billingAddress?.postalCode}<br/>
+                                {order.billingAddress?.phone}<br/>
+                        </p>
+                    </div>
+                    ) : null
+            }
             <p>
                 Date:{" "}
                 {new Date(order.createdAt).toLocaleDateString()}

@@ -3,16 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 type Order = {
     _id: string;
-    totalPrice: number;
-    paymentStatus: string;
     orderStatus: string;
     createdAt: string;
     items: {
         productId: number;
         itemName: string;
-        quantity: number;
-        priceAtPurchase: number;
-        itemSubtotal: number;
         image: string;
     }[];
 };
@@ -70,18 +65,14 @@ function Orders() {
                             {new Date(order.createdAt).toLocaleDateString()}
                         </p>
 
-                        <p>Total: ₹{order.totalPrice}</p>
                         {
                             order.items.map(item => (
                                 <div key={item.productId}>
                                     <p>{item.itemName}</p>
-                                    <p>Quantity: {item.quantity}</p>
-                                    <p>Price: ₹{item.priceAtPurchase}</p>
-                                    <p>Subtotal: ₹{item.itemSubtotal}</p>
+                                    <img src={item.image} />
                                 </div>
                             )
                         )}
-                        <p>Payment: {order.paymentStatus}</p>
 
                         <p>Status: {order.orderStatus}</p>
                     </div>

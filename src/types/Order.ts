@@ -1,3 +1,15 @@
+export type AddressSnapshot = {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+};
+
 export type Order = {
     _id: string;
     totalPrice: number;
@@ -19,4 +31,6 @@ export type Order = {
     subtotal: number;
     tax: number;
     paymentMethod: string;
+    shippingAddress: AddressSnapshot;
+    billingAddress: AddressSnapshot;
 };
