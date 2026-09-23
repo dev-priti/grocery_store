@@ -413,7 +413,7 @@ function App() {
   
   return(
     <>
-    <BrowserRouter basename="/grocery_store">
+    <BrowserRouter>
       <Header greetings="Hello" searchText={searchText} setSearchText={setSearchText} cartCount={cartCount} user={user} setUser={setUser} setCart={setCart} />
       <Navbar categories={categories} />
       <Routes>
