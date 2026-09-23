@@ -15,22 +15,33 @@ function CartPopup ({product, cartCount, onClose} : cartPopupProps) {
     };
 
     return (
-        <div className="cart-overlay">
-            <div className="cart-popup">
-                <button onClick={onClose}>X</button>
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    width="80"
-                />
-                <h3>{product.name}</h3>
-                <p>₹{product.price}</p>
-                <p>Added to your bag!</p>
-                <p>Items in bag: {cartCount}</p>
-                {/* <Link to="/cart">
-                    View Cart
-                </Link> OR  */}
-                <button onClick={handleViewCart}>Viewcart</button>
+        <div className="cart-overlay modal">
+            <div className="model-dialog">
+                <div className="cart-popup modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Item added to the bag.</h5>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={onClose}>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            width="80"
+                            />
+                        <h3>{product.name}</h3>
+                        <p>₹{product.price}</p>
+                        <p>Added to your bag!</p>
+                        <p>Items in bag: {cartCount}</p>
+                        {/* <Link to="/cart">
+                            View Cart
+                            </Link> OR  */}
+                    </div>
+                    <div className="modal-footer">
+                        <button className="btn btn-primary" onClick={handleViewCart}>Viewcart</button>
+                    </div>
+                </div>
             </div>
         </div>
     );

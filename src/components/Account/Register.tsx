@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 // import { getAllUsers, saveUser } from "../../util/auth"; // React authentication
 
 function Register() {
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,12 +26,17 @@ function Register() {
             return;
         }
 
-        if (!name.trim()) {
-            alert("Please enter your name");
+        if (!firstName.trim()) {
+            alert("Please enter your first name");
             return;
         }
 
-        if (name.trim().length < 2) {
+        if (!lastName.trim()) {
+            alert("Please enter your last name");
+            return;
+        }
+
+        if (firstName.trim().length < 2 || lastName.trim().length < 2) {
             alert("Name must be at least 2 characters");
             return;
         }
@@ -62,7 +68,8 @@ function Register() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name,
+                    firstName,
+                    lastName,
                     email,
                     password,
                 }),            
@@ -77,7 +84,8 @@ function Register() {
         
             //saveUser(newUser);
 
-            setName("");
+            setFirstName("");
+            setLastName("");
             setEmail("");
             setPassword("");
             setConfirmPassword("");
@@ -93,47 +101,77 @@ function Register() {
     }
 
     return (
-        <div className="register-container">
+        <div className="register-container bd-example">
             <h2>Create Account</h2>
 
             <form name="register" onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
+                <div className="form-row">
+                    <div className="form-group col-md-6">
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            className="form-control"
+                            id="inputFirstName4"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            />
+                    </div>
 
-                <input
-                    type="email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+                    <div className="form-group col-md-6">
+                        <input
+                            type="text"
+                            placeholder="Last Name"
+                            className="form-control"
+                            id="inputLastNam4"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            />
+                    </div>
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                />          
-                <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                    {showConfirmPassword ? "Hide" : "Show"}
-                </button>
-                <button type="submit">Register</button>
+                    <div className="form-group col-md-6">
+                        <input
+                            type="email"
+                            placeholder="Email address"
+                            className="form-control"
+                            id="inputEmail4"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            />
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md-6">
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            className="form-control"
+                            id="inputPassword4"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                    </div>
+                        
+                    <div className="form-group col-md-6">
+                        <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm password"
+                        className="form-control"
+                        id="inputConfirmPassword4"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        />       
+                        <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                            {showConfirmPassword ? "Hide" : "Show"}
+                        </button>   
+                    </div>
+                </div>
+                <button type="submit" className="btn btn-primary">Register</button>
             </form>
             <Link to="/login">
-            Login
+                Login
             </Link>
         </div>
     );

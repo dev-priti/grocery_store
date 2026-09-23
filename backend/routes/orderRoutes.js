@@ -39,6 +39,30 @@ router.post("/", authMiddleware, async (req, resp) => {
             userId: req.userId,
         });
 
+        const shippingAddressSnapshot = {
+            firstName: shippingAddress.firstName,
+            lastName: shippingAddress.lastName,
+            phone: shippingAddress.phone,
+            addressLine1: shippingAddress.addressLine1,
+            addressLine2: shippingAddress.addressLine2 || "",
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            postalCode: shippingAddress.postalCode,
+            country: shippingAddress.country || "India",
+        };
+
+        const billingAddressSnapshot = {
+            firstName: billingAddress.firstName,
+            lastName: billingAddress.lastName,
+            phone: billingAddress.phone,
+            addressLine1: billingAddress.addressLine1,
+            addressLine2: billingAddress.addressLine2 || "",
+            city: billingAddress.city,
+            state: billingAddress.state,
+            postalCode: billingAddress.postalCode,
+            country: billingAddress.country || "India",
+        };
+
         if (!shippingAddress) {
             return resp.status(400).json({
                 message: "Invalid shipping address",
@@ -164,6 +188,8 @@ router.post("/", authMiddleware, async (req, resp) => {
                     totalPrice,
                     shippingAddressId,
                     billingAddressId,
+                    shippingAddress: shippingAddressSnapshot,
+                    billingAddress: billingAddressSnapshot,
                     shippingMethod,
                     paymentMethod,
                     paymentStatus: "pending",

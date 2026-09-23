@@ -42,6 +42,50 @@ const orderItemSchema = new mongoose.Schema({
     },
 });
 
+const addressSnapshotSchema = new mongoose.Schema(
+    {
+        firstName: {
+            type: String,
+            required: true,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        phone: {
+            type: String,
+            required: true,
+        },
+        addressLine1: {
+            type: String,
+            required: true,
+        },
+        addressLine2: {
+            type: String,
+            default: "",
+        },
+        city: {
+            type: String,
+            required: true,
+        },
+        state: {
+            type: String,
+            required: true,
+        },
+        postalCode: {
+            type: String,
+            required: true,
+        },
+        country: {
+            type: String,
+            default: "India",
+        },
+    },
+    {
+        _id: false,
+    }
+);
+
 const orderSchema = new mongoose.Schema(
     {
         userId: {
@@ -119,53 +163,18 @@ const orderSchema = new mongoose.Schema(
             type: String,
             default: "pending",
         },
+        shippingAddress: {
+            type: addressSnapshotSchema,
+            required: true,
+        },
+
+        billingAddress: {
+            type: addressSnapshotSchema,
+            required: true,
+        },
     },
     {
         timestamps: true,
-    }
-);
-
-const addressSnapshotSchema = new mongoose.Schema(
-    {
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: true,
-        },
-        phone: {
-            type: String,
-            required: true,
-        },
-        addressLine1: {
-            type: String,
-            required: true,
-        },
-        addressLine2: {
-            type: String,
-            default: "",
-        },
-        city: {
-            type: String,
-            required: true,
-        },
-        state: {
-            type: String,
-            required: true,
-        },
-        postalCode: {
-            type: String,
-            required: true,
-        },
-        country: {
-            type: String,
-            default: "India",
-        },
-    },
-    {
-        _id: false,
     }
 );
 

@@ -1,8 +1,8 @@
-import { useReducer } from "react";
+import { useReducer, type FormEvent } from "react";
 import {
     addressReducer,
     initialAddressForm,
-    type AddressForm,
+    type AddressForm as AddressFormState,
 } from "../../reducers/addressReducer";
 import type { Address } from "../../types/Address";
 
@@ -17,7 +17,7 @@ function AddressForm({
         onSaved,
         onCancel,
     }: AddressFormProps) {
-        const initialForm: AddressForm = address
+        const initialForm: AddressFormState = address
             ? {
                 firstName: address.firstName,
                 lastName: address.lastName,
@@ -37,7 +37,7 @@ function AddressForm({
         );
 
         const handleSubmit = async (
-            event: React.FormEvent<HTMLFormElement>
+            event: FormEvent<HTMLFormElement>
         ) => {
             event.preventDefault();
 
@@ -51,7 +51,7 @@ function AddressForm({
             const isEditing = Boolean(address);
 
             const url = isEditing
-                ? `http://localhost:3000/api/addresses/${address._id}`
+                ? `http://localhost:3000/api/addresses/${address?._id}`
                 : "http://localhost:3000/api/addresses";
 
             try {
