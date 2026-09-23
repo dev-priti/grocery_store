@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Order } from "../../types/Order";
+import { getAuthToken } from "../../util/auth";
 //import type { Address } from "../../types/Address";
 
 function OrderDetails() {
@@ -12,7 +13,7 @@ function OrderDetails() {
  
     useEffect(() => {
         const fetchOrderDetails = async () => {
-            const token = localStorage.getItem("token");
+            const token = getAuthToken();
             if (!token || !orderId) {
                 return;
             }

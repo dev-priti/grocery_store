@@ -2,6 +2,7 @@ import type { CartItem } from "../types/ProductType";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AddressSelector from "../../src/components/Checkout/AddressSelector";
+import { getAuthToken } from "../util/auth";
 import { DEFAULT_PRODUCT_IMAGE, getProductImage } from "../util/productImage";
 
 type CheckoutProps = {
@@ -41,7 +42,7 @@ function Delivery({ cart, setCart }: CheckoutProps) {
 
         setPlacingOrder(true);
 
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             alert("Please login first");

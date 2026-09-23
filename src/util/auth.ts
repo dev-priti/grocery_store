@@ -40,7 +40,35 @@
 //   localStorage.setItem("users", JSON.stringify(savedUsers));
 // }
 
+const AUTH_TOKEN_KEY = "token";
+
+function getTokenStorage(): Storage | null {
+  try {
+    return window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+export function getAuthToken(): string | null {
+  const storage = getTokenStorage();
+  return storage ? storage.getItem(AUTH_TOKEN_KEY) : null;
+}
+
+export function setAuthToken(token: string): void {
+  const storage = getTokenStorage();
+  if (storage) {
+    storage.setItem(AUTH_TOKEN_KEY, token);
+  }
+}
+
+export function clearAuthToken(): void {
+  const storage = getTokenStorage();
+  if (storage) {
+    storage.removeItem(AUTH_TOKEN_KEY);
+  }
+}
+
 export function logoutUser(): void {
-  //localStorage.removeItem("loggedInUser");
-  localStorage.removeItem("token");
+  clearAuthToken();
 }
