@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      const segmentCount = 1;
+      const location = window.location;
+      const pathSegments = location.pathname.split('/').filter(Boolean);
+
+      const routePath = pathSegments.slice(segmentCount).join('/');
+      const redirectUrl =
+        location.origin +
+        location.pathname
+          .split('/')
+          .slice(0, segmentCount + 1)
+          .join('/') +
+        '/?/' +
+        routePath +
+        location.search.replace(/&/g, '~and~') +
+        location.hash;
+
+      location.replace(redirectUrl);
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>
